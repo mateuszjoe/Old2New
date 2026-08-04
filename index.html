@@ -3,27 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0b09" />
+    <meta name="theme-color" content="#090908" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <script>
       document.documentElement.classList.add("js");
       try {
-        if (sessionStorage.getItem("old2new-intro-seen")) {
+        const forceIntro = new URLSearchParams(window.location.search).has("intro");
+        const introSeenAt = Number(localStorage.getItem("old2new-intro-seen-at"));
+        const introIsFresh = Date.now() - introSeenAt < 24 * 60 * 60 * 1000;
+        if (!forceIntro && introIsFresh) {
           document.documentElement.classList.add("intro-seen");
         }
       } catch (error) {}
     </script>
     <meta
       name="description"
-      content="OLD2NEW — ręczna pielęgnacja samochodów i metamorfozy aut wykonywane przez Dawida. Zobacz realizacje i zapytaj o termin."
+      content="Ręczna pielęgnacja samochodów w garażu Dawida w Okuniewie. Zobacz realizacje, opinie i wyślij zdjęcia auta do wyceny."
     />
+    <link rel="canonical" href="https://mateuszjoe.github.io/Old2New/" />
     <meta property="og:title" content="OLD2NEW — od starości do nowości" />
     <meta
       property="og:description"
       content="Bez taśmy. Bez pośpiechu. Za to z efektem, który widać od razu."
     />
-    <meta property="og:image" content="assets/garage-hero.png" />
-    <title>OLD2NEW | Pielęgnacja samochodów</title>
-    <link rel="preload" as="image" href="assets/loader-bmw-cartoon-final.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pl_PL" />
+    <meta property="og:url" content="https://mateuszjoe.github.io/Old2New/" />
+    <meta property="og:image" content="https://mateuszjoe.github.io/Old2New/assets/garage-hero.jpg" />
+    <meta property="og:image:width" content="1962" />
+    <meta property="og:image:height" content="802" />
+    <meta property="og:image:alt" content="Ciemne klasyczne BMW w garażu OLD2NEW" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="OLD2NEW — od starości do nowości" />
+    <meta name="twitter:description" content="Ręczna pielęgnacja aut w garażu Dawida w Okuniewie." />
+    <meta name="twitter:image" content="https://mateuszjoe.github.io/Old2New/assets/garage-hero.jpg" />
+    <title>OLD2NEW | Pielęgnacja samochodów — Okuniew</title>
+    <link rel="icon" href="assets/instagram-avatar.jpg" type="image/jpeg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,9 +48,48 @@
     />
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "@id": "https://mateuszjoe.github.io/Old2New/#business",
+        "name": "Myjnia Okuniew - OdStarościDoNowości",
+        "alternateName": "OLD2NEW",
+        "description": "Ręczna pielęgnacja samochodów w garażu Dawida w Okuniewie.",
+        "url": "https://mateuszjoe.github.io/Old2New/",
+        "image": "https://mateuszjoe.github.io/Old2New/assets/garage-hero.jpg",
+        "telephone": "+48 797 843 789",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Łąkowa 33",
+          "postalCode": "05-079",
+          "addressLocality": "Okuniew",
+          "addressCountry": "PL"
+        },
+        "sameAs": [
+          "https://www.instagram.com/od_staroscidonowosci/",
+          "https://www.google.com/maps/search/?api=1&query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
+        ]
+      }
+    </script>
+    <noscript>
+      <style>
+        @media (max-width: 900px) {
+          .menu-toggle { display: none !important; }
+          .nav-menu { position: static !important; visibility: visible !important; transform: none !important; }
+        }
+      </style>
+    </noscript>
   </head>
   <body>
-    <div class="preloader" data-preloader aria-label="Animowane intro OLD2NEW">
+    <div
+      class="preloader"
+      data-preloader
+      role="dialog"
+      aria-modal="true"
+      aria-label="Animowane intro OLD2NEW"
+      aria-describedby="loader-copy"
+    >
       <div class="preloader-atmosphere" aria-hidden="true"></div>
       <div class="loader-topline">
         <span class="loader-wordmark">OLD<span>2</span>NEW</span>
@@ -65,7 +119,8 @@
           <g class="loader-car">
             <image
               class="loader-car-art"
-              href="assets/loader-bmw-cartoon-final.png"
+              data-loader-car
+              data-src="assets/loader-bmw-cartoon-final.png"
               x="118"
               y="-12"
               width="404"
@@ -114,7 +169,7 @@
 
       <div class="loader-bottomline">
         <div class="loader-progress"><span></span></div>
-        <span>Brud schodzi. Charakter zostaje.</span>
+        <span id="loader-copy">Brud schodzi. Charakter zostaje.</span>
       </div>
       <button class="loader-skip" type="button" data-skip-intro>Pomiń intro</button>
     </div>
@@ -124,7 +179,7 @@
     <header class="site-header" data-header>
       <div class="container nav-wrap">
         <a class="brand" href="#start" aria-label="OLD2NEW — strona główna">
-          <img src="assets/instagram-avatar.jpg" alt="" />
+          <img src="assets/instagram-avatar.jpg" alt="" width="100" height="100" />
           <span>OLD<span>2</span>NEW</span>
         </a>
 
@@ -142,7 +197,7 @@
       </div>
     </header>
 
-    <main id="main">
+    <main id="main" tabindex="-1">
       <section id="start" class="hero">
         <div class="hero-photo" aria-hidden="true"></div>
         <div class="hero-noise" aria-hidden="true"></div>
@@ -150,42 +205,43 @@
           <p class="kicker reveal">Garaż Dawida <span>•</span> pielęgnacja aut</p>
           <h1 class="reveal">
             Od starości<br />
-            <span>do nowości.</span>
+            <span>do nowości<span class="hero-dot">.</span></span>
           </h1>
           <p class="hero-lead reveal">
             Każde auto ma jeszcze coś do pokazania. Trzeba tylko dać mu czas,
             dobrą chemię i dwie konkretne ręce.
           </p>
           <div class="hero-actions reveal">
-            <a class="button button-primary" href="#kontakt">Pokaż swoje auto</a>
-            <a class="button button-ghost" href="#realizacje">Zobacz robotę</a>
+            <a
+              class="button button-primary"
+              href="https://www.instagram.com/od_staroscidonowosci/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Wyślij zdjęcia auta na Instagramie — otwiera nową kartę"
+            >Wyślij zdjęcia auta <span aria-hidden="true">↗</span></a>
+            <a class="button button-ghost" href="#realizacje">Sprawdź robotę</a>
           </div>
           <div class="hero-signature reveal" aria-label="Sposób pracy">
             <span>Ręczna robota</span>
-            <strong>Bez taśmy. Bez pośpiechu.</strong>
+            <strong>Jedno auto na raz.</strong>
           </div>
-          <p class="scribble hero-note" aria-hidden="true">
-            robię tak, jakbym robił dla siebie
-            <svg viewBox="0 0 130 64" role="presentation">
-              <path d="M4 7c39 3 76 13 108 35m0 0-16-3m16 3-9 13" />
-            </svg>
-          </p>
         </div>
       </section>
 
-      <section class="ticker" aria-label="Najważniejsze cechy">
-        <div class="ticker-track">
-          <span>Dokładnie</span><i>✦</i><span>Bez pośpiechu</span><i>✦</i>
-          <span>Po swojemu</span><i>✦</i><span>Z charakterem</span><i>✦</i>
+      <div class="ticker" aria-label="Najważniejsze informacje">
+        <div class="ticker-track" role="list">
+          <span role="listitem">Ręcznie</span><i aria-hidden="true">✦</i>
+          <span role="listitem">Okuniew</span><i aria-hidden="true">✦</i>
+          <span role="listitem">Bez pośpiechu</span>
         </div>
-      </section>
+      </div>
 
       <section id="o-mnie" class="section intro-section">
         <div class="container intro-grid">
           <div class="section-index reveal" aria-hidden="true">01 / Garaż</div>
           <div>
             <p class="kicker reveal">To nie jest myjnia z taśmy</p>
-            <h2 class="section-title reveal">Tu liczy się <em>różnica.</em></h2>
+            <h2 class="section-title reveal">Tu liczy się<br /><span>różnica.</span></h2>
           </div>
           <div class="intro-copy reveal">
             <p>
@@ -204,93 +260,144 @@
         <div class="container">
           <div class="section-head">
             <div>
-              <p class="kicker reveal">Co możemy zrobić</p>
-              <h2 class="section-title reveal">Dobra robota.<br />Bez zbędnej gadki.</h2>
+              <p class="kicker reveal">Co mogę ogarnąć</p>
+              <h2 class="section-title reveal">Najpierw auto.<br /><span>Potem zakres.</span></h2>
             </div>
-            <p class="scribble reveal">zakres i cena<br />po obejrzeniu auta ↓</p>
+            <p class="section-note reveal">Cena i zakres zawsze po obejrzeniu auta.</p>
           </div>
 
           <div class="service-list">
             <article class="service reveal">
               <span class="service-number">01</span>
               <div><h3>Mycie zewnętrzne</h3><p>Dokładne oczyszczenie auta i dopracowanie detali.</p></div>
-              <span class="service-mark" aria-hidden="true">↗</span>
+              <span class="service-tag">Lakier • felgi • detale</span>
             </article>
             <article class="service reveal">
               <span class="service-number">02</span>
               <div><h3>Odświeżenie wnętrza</h3><p>Porządek tam, gdzie spędzasz najwięcej czasu.</p></div>
-              <span class="service-mark" aria-hidden="true">↗</span>
+              <span class="service-tag">Kokpit • plastiki • porządek</span>
             </article>
             <article class="service reveal">
               <span class="service-number">03</span>
-              <div><h3>Detailing</h3><p>Praca nad detalem, połyskiem i finalnym efektem.</p></div>
-              <span class="service-mark" aria-hidden="true">↗</span>
+              <div><h3>Dopracowanie detali</h3><p>Praca nad połyskiem, wykończeniem i końcowym efektem.</p></div>
+              <span class="service-tag">Połysk • wykończenie</span>
             </article>
             <article class="service reveal">
               <span class="service-number">04</span>
               <div><h3>Indywidualna robota</h3><p>Masz konkretny problem? Najpierw obejrzymy auto.</p></div>
-              <span class="service-mark" aria-hidden="true">↗</span>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="realizacje" class="section work-section">
-        <div class="container work-grid">
-          <div class="work-copy">
-            <p class="kicker reveal">26 realizacji na Instagramie</p>
-            <h2 class="section-title reveal">Efekt mówi<br /><em>sam za siebie.</em></h2>
+      <section id="jak-to-dziala" class="section process-section" aria-labelledby="process-title">
+        <div class="container process-layout">
+          <div class="process-copy">
+            <p class="kicker reveal">Jak to wygląda</p>
+            <h2 id="process-title" class="section-title reveal">Trzy kroki.<br /><span>Zero formularzy.</span></h2>
             <p class="reveal">
-              Zobacz bieżące realizacje, zdjęcia przed i po oraz to, co aktualnie dzieje się
-              w garażu.
+              Nie wybierasz pakietu w ciemno. Najpierw pokazujesz auto, potem ustalamy,
+              co naprawdę ma sens.
             </p>
+          </div>
+
+          <article class="work-order" aria-label="Karta przyjęcia auta">
+            <header class="work-order-head">
+              <div><small>Karta przyjęcia auta</small><strong>OLD<span>2</span>NEW</strong></div>
+              <p>Garaż Dawida<br />Okuniew</p>
+            </header>
+            <ol class="work-order-list">
+              <li>
+                <span>01</span>
+                <div><h3>Wyślij zdjęcia</h3><p>Pokaż auto i napisz krótko, co najbardziej Ci przeszkadza.</p></div>
+              </li>
+              <li>
+                <span>02</span>
+                <div><h3>Ustalamy robotę</h3><p>Zakres, cena i termin dopiero po obejrzeniu samochodu.</p></div>
+              </li>
+              <li>
+                <span>03</span>
+                <div><h3>Odbierasz auto</h3><p>Różnicę widać od razu. Bez taśmy i bez pracy na czas.</p></div>
+              </li>
+            </ol>
+            <footer class="work-order-foot">
+              <span>Bez gotowych pakietów</span>
+              <span class="order-sign">konkretnie, po ludzku</span>
+            </footer>
+          </article>
+        </div>
+      </section>
+
+      <section id="realizacje" class="section proof-section">
+        <div class="container">
+          <div class="proof-head">
+            <p class="kicker reveal">Realizacje i opinie</p>
+            <h2 class="section-title reveal">Zajrzyj do<br /><span>garażu.</span></h2>
+            <p class="reveal">Świeże realizacje trafiają na Instagram, a opinie klientów zostają na wizytówce Google.</p>
+          </div>
+
+          <div class="proof-grid">
             <a
-              class="button button-light reveal"
+              class="proof-card proof-instagram reveal"
               href="https://www.instagram.com/od_staroscidonowosci/"
               target="_blank"
               rel="noopener noreferrer"
-            >Otwórz Instagram <span>↗</span></a>
+              aria-label="Zobacz bieżące realizacje na Instagramie — otwiera nową kartę"
+            >
+              <div class="proof-card-top">
+                <span>01 / Bieżące realizacje</span>
+                <img src="assets/instagram-avatar.jpg" alt="" width="100" height="100" />
+              </div>
+              <strong>Instagram</strong>
+              <p>@od_staroscidonowosci</p>
+              <span class="proof-link">Otwórz profil <i aria-hidden="true">↗</i></span>
+            </a>
+
+            <a
+              class="proof-card proof-google reveal"
+              href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Zobacz lokalizację i opinie w Google — otwiera nową kartę"
+            >
+              <div class="proof-card-top"><span>02 / Opinie klientów</span><span class="proof-seal">5,0 W GOOGLE</span></div>
+              <strong>Google</strong>
+              <p>Myjnia Okuniew — OdStarościDoNowości</p>
+              <span class="proof-link">Otwórz wizytówkę <i aria-hidden="true">↗</i></span>
+            </a>
           </div>
-          <a
-            class="insta-card reveal"
-            href="https://www.instagram.com/od_staroscidonowosci/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Przejdź do profilu OLD2NEW na Instagramie"
-          >
-            <div class="insta-card-photo"></div>
-            <div class="insta-card-top"><span>@od_staroscidonowosci</span><span>●</span></div>
-            <div class="insta-card-bottom"><strong>Obserwuj robotę</strong><span>↗</span></div>
-          </a>
         </div>
       </section>
 
       <section id="kontakt" class="section contact-section">
         <div class="container contact-wrap">
           <p class="kicker reveal">Masz auto do ogarnięcia?</p>
-          <h2 class="contact-title reveal">Pokaż, co jest<br /><span>do zrobienia.</span></h2>
+          <h2 class="contact-title reveal">Pokaż, co jest<br />do zrobienia<span>.</span></h2>
           <p class="contact-lead reveal">
-            Napisz na Instagramie albo sprawdź pinezkę Google. Termin i zakres
-            ustalimy po krótkiej rozmowie.
+            Podeślij zdjęcia na Instagramie albo zadzwoń. Zakres i termin ustalimy
+            po krótkiej rozmowie i obejrzeniu auta.
           </p>
+          <dl class="contact-details reveal">
+            <div><dt>Garaż</dt><dd>Łąkowa 33, Okuniew</dd></div>
+            <div><dt>Telefon</dt><dd><a class="contact-phone" href="tel:+48797843789">797 843 789</a></dd></div>
+            <div><dt>Wycena</dt><dd>Po obejrzeniu auta</dd></div>
+          </dl>
           <div class="contact-actions reveal">
             <a
               class="button button-dark"
               href="https://www.instagram.com/od_staroscidonowosci/"
               target="_blank"
               rel="noopener noreferrer"
-            >Napisz na IG <span>↗</span></a>
+              aria-label="Wyślij zdjęcia auta na Instagramie — otwiera nową kartę"
+            >Wyślij zdjęcia na IG <span aria-hidden="true">↗</span></a>
             <a
               class="button button-outline-dark"
-              href="https://share.google/rSSlxOMJcQEGAOMzw"
+              href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
               target="_blank"
               rel="noopener noreferrer"
-            >Znajdź w Google <span>↗</span></a>
+              aria-label="Otwórz pinezkę OLD2NEW w Google — otwiera nową kartę"
+            >Otwórz pinezkę <span aria-hidden="true">↗</span></a>
           </div>
-          <p class="scribble contact-note" aria-hidden="true">
-            pokaż auto. reszta dzieje się w garażu
-            <svg viewBox="0 0 116 56" role="presentation"><path d="M111 7C73 4 41 16 11 41m0 0 16-2M11 41l8 12" /></svg>
-          </p>
         </div>
       </section>
     </main>
@@ -298,10 +405,11 @@
     <footer class="footer">
       <div class="container footer-wrap">
         <a class="brand footer-brand" href="#start"><span>OLD<span>2</span>NEW</span></a>
-        <p>Od starości do nowości.</p>
+        <p>Garaż Dawida • Okuniew</p>
         <div>
-          <a href="https://www.instagram.com/od_staroscidonowosci/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
-          <a href="https://share.google/rSSlxOMJcQEGAOMzw" target="_blank" rel="noopener noreferrer">Google ↗</a>
+          <a href="https://www.instagram.com/od_staroscidonowosci/" target="_blank" rel="noopener noreferrer" aria-label="Instagram — otwiera nową kartę">Instagram ↗</a>
+          <a href="tel:+48797843789" aria-label="Zadzwoń pod numer 797 843 789">Telefon</a>
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci" target="_blank" rel="noopener noreferrer" aria-label="Google — otwiera nową kartę">Google ↗</a>
         </div>
         <small>© <span data-year></span> OLD2NEW</small>
       </div>

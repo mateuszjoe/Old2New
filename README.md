@@ -1,29 +1,38 @@
 # OLD2NEW
 
-Strona demonstracyjna dla **Dawid.Garage — Od Starości Do Nowości**.
+Jednostronicowa wizytówka garażu Dawida w Okuniewie: ręczna pielęgnacja aut,
+bieżące realizacje i szybki kontakt bez wymyślonego cennika.
 
-## Założenia
+## Kierunek
 
-- oldschoolowy, garażowy charakter,
-- klimat top-downowego miejskiego arcade i garażowy HUD,
-- kreskówkowe intro z oldschoolową beemką: brud, ścierka, myjka ciśnieniowa i końcowy połysk,
-- prosta strona typu one-page,
-- szybki kontakt przez Instagram i wizytówkę Google,
-- responsywny układ i lekkie animacje,
-- oferta bez cen do czasu ustalenia finalnego zakresu usług.
+- ciemny, oldschoolowy garaż po godzinach,
+- motoryzacyjny klimat przełomu lat 90. i 00. bez kopiowania interfejsów gier,
+- mocny wordmark OLD2NEW i oszczędna paleta kości słoniowej, grafitu i oxblood,
+- krótka animacja mycia kreskówkowej beemki, pokazywana najwyżej raz na dobę,
+- analogowa karta przyjęcia auta jako własny motyw strony,
+- uczciwe odnośniki do prawdziwych realizacji na Instagramie i opinii Google.
 
-## Uruchomienie lokalne
+## Uruchomienie
 
-Projekt nie wymaga instalowania zależności. Otwórz `index.html` albo uruchom prosty serwer:
+Projekt nie wymaga budowania ani instalowania zależności. Można otworzyć
+`index.html` bezpośrednio albo uruchomić dowolny prosty serwer statyczny.
+
+Parametr `?intro=1` wymusza ponowne pokazanie intro podczas testów.
+
+## Testy
 
 ```bash
-python -m http.server 8000
+npm test
 ```
 
-Następnie otwórz `http://localhost:8000`.
+Test sprawdza składnię JavaScriptu, lokalne assety, kotwice, unikalność ID,
+bezpieczeństwo linków zewnętrznych, podstawowe metadane i brak starych elementów HUD.
 
 ## Materiały
 
-- istniejący znak profilowy pochodzi z publicznego profilu marki na Instagramie,
-- grafika główna została wygenerowana na potrzeby tej wersji demonstracyjnej,
-- docelowe zdjęcia realizacji i dane kontaktowe zostaną uzupełnione po akceptacji kierunku.
+- znak profilowy pochodzi z publicznego profilu marki na Instagramie,
+- grafiki auta zostały przygotowane na potrzeby tej wersji demonstracyjnej,
+- prawdziwe zdjęcia realizacji i cytaty z opinii powinny trafić na stronę dopiero po
+  otrzymaniu plików źródłowych i zgody na publikację — strona obecnie niczego nie udaje.
+
+Wersja publiczna: <https://mateuszjoe.github.io/Old2New/>
