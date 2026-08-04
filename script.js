@@ -77,6 +77,34 @@ const hydrateMenuCars = () => {
   });
 };
 
+let menuCarWarmupScheduled = false;
+const scheduleMenuCarWarmup = () => {
+  if (
+    !mobileMenu.matches ||
+    menuCarWarmupScheduled ||
+    menuCars.every((car) => car.getAttribute("src"))
+  ) {
+    return;
+  }
+
+  menuCarWarmupScheduled = true;
+  const warmUp = () => {
+    menuCarWarmupScheduled = false;
+    if (!mobileMenu.matches) return;
+    menuCars.forEach((car) => {
+      car.fetchPriority = "low";
+      car.decoding = "async";
+    });
+    hydrateMenuCars();
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(warmUp, { timeout: 1200 });
+  } else {
+    window.setTimeout(warmUp, 350);
+  }
+};
+
 const finishMenuClose = () => {
   clearMenuCloseTimer();
   menuOpen = false;
@@ -495,6 +523,7 @@ gallerySwipeArea?.addEventListener("lostpointercapture", clearGalleryPointer);
 
 const handleMenuBreakpoint = () => {
   setMenuState(false, { immediate: true });
+  scheduleMenuCarWarmup();
 };
 
 const revealItems = document.querySelectorAll(".reveal");
@@ -539,6 +568,7 @@ const addMediaChangeListener = (mediaQuery, listener) => {
 
 addMediaChangeListener(mobileMenu, handleMenuBreakpoint);
 addMediaChangeListener(reducedMotion, handleReducedMotionChange);
+scheduleMenuCarWarmup();
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;

@@ -180,6 +180,7 @@ for (const viewport of viewports) {
         clientHeight: nav.clientHeight,
         scrollHeight: nav.scrollHeight,
         linkHeights,
+        carsHydrated: [...nav.querySelectorAll('[data-menu-car]')].every((car) => Boolean(car.getAttribute('src'))),
       };
       document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
       toggle.click();
@@ -334,7 +335,7 @@ for (const report of reports) {
   if (report.layout.clipped.length) failures.push(`${report.viewport}: elementy poza viewportem ${JSON.stringify(report.layout.clipped)}`);
   if (report.layout.smallTargets.length) failures.push(`${report.viewport}: cele dotykowe <44 px ${JSON.stringify(report.layout.smallTargets)}`);
   if (report.menu.mode === "mobile") {
-    if (report.menu.open.expanded !== "true" || report.menu.open.visible !== "visible") failures.push(`${report.viewport}: menu nie otwiera się poprawnie`);
+    if (report.menu.open.expanded !== "true" || report.menu.open.visible !== "visible" || !report.menu.open.carsHydrated) failures.push(`${report.viewport}: menu nie otwiera się poprawnie`);
     if (!report.menu.rapidReopen) failures.push(`${report.viewport}: szybkie ponowne otwarcie menu nie dziala`);
     if (!report.menu.closed || !report.menu.focusReturned) failures.push(`${report.viewport}: menu nie zamyka się poprawnie`);
     if (report.menu.open.linkHeights.some((height) => height < 44)) failures.push(`${report.viewport}: link menu <44 px`);
