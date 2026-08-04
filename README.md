@@ -26,7 +26,13 @@ npm test
 ```
 
 Test sprawdza składnię JavaScriptu, lokalne assety, kotwice, unikalność ID,
-bezpieczeństwo linków zewnętrznych, podstawowe metadane i brak starych elementów HUD.
+bezpieczeństwo linków zewnętrznych, metadane, mobilny viewport i brak starych
+elementów HUD.
+
+Rozszerzony test przeglądarkowy `npm run test:mobile` łączy się z Chrome DevTools
+pod `http://127.0.0.1:9231` (adres można zmienić zmienną `CDP_ENDPOINT`). Sprawdza
+układ, cele dotykowe, menu i błędy konsoli na siedmiu viewportach od 280 px do
+mobilnego landscape. Opcjonalna zmienna `MOBILE_AUDIT_OUTPUT` zapisuje zrzuty.
 
 ## Materiały
 

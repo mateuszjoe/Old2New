@@ -46,6 +46,7 @@ check(imageTags.every((tag) => /\bwidth=["']\d+["']/.test(tag) && /\bheight=["']
 
 check(/<link\s+rel=["']canonical["']/.test(html), "Canonical jest ustawiony");
 check(/property=["']og:url["']/.test(html) && /name=["']twitter:card["']/.test(html), "Metadane Open Graph i Twitter są kompletne");
+check(/name=["']viewport["'][^>]*viewport-fit=cover/.test(html), "Viewport obsługuje safe-area urządzeń mobilnych");
 check(/<main\b[^>]*tabindex=["']-1["']/.test(html), "Główna treść przyjmuje focus po pominięciu intro");
 check(/href=["']tel:\+48797843789["']/.test(html), "Zweryfikowany numer telefonu jest klikalny");
 const jsonLd = html.match(/<script\s+type=["']application\/ld\+json["']>([\s\S]*?)<\/script>/)?.[1];
@@ -56,6 +57,7 @@ try {
 check(validJsonLd, "Dane LocalBusiness JSON-LD są poprawnym JSON-em");
 check(!/26 realizacji/i.test(html), "Brak szybko dezaktualizującej się liczby realizacji");
 check(!/(?:MISJA_|GARAGE SYSTEM|hero-minimap|loader-reticle|VT323|arcade|garażowy HUD)/i.test(`${html}\n${css}`), "Brak elementów i języka HUD/arcade");
+check(/@media\s*\(max-width:\s*340px\)/.test(css) && /orientation:\s*landscape/.test(css), "CSS obejmuje wąskie telefony i orientację poziomą");
 
 const heroPath = resolve(root, "assets/garage-hero.jpg");
 check(existsSync(heroPath) && statSync(heroPath).size < 500_000, "Hero waży mniej niż 500 kB");
