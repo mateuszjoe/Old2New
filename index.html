@@ -193,6 +193,25 @@
           <a href="#zakres">Co robię</a>
           <a href="#realizacje">Realizacje</a>
           <a class="nav-cta" href="#kontakt">Zapytaj o termin</a>
+          <div class="menu-car-scene" aria-hidden="true">
+            <img
+              class="menu-car menu-car-driving"
+              data-menu-car
+              data-src="assets/menu-car-driving.png"
+              alt=""
+              width="800"
+              height="264"
+            />
+            <img
+              class="menu-car menu-car-crashed"
+              data-menu-car
+              data-src="assets/menu-car-crashed.png"
+              alt=""
+              width="800"
+              height="399"
+            />
+            <span class="menu-impact"><i></i><i></i><i></i></span>
+          </div>
         </nav>
       </div>
     </header>
@@ -331,39 +350,107 @@
       <section id="realizacje" class="section proof-section">
         <div class="container">
           <div class="proof-head">
-            <p class="kicker reveal">Realizacje i opinie</p>
-            <h2 class="section-title reveal">Zajrzyj do<br /><span>garażu.</span></h2>
-            <p class="reveal">Świeże realizacje trafiają na Instagram, a opinie klientów zostają na wizytówce Google.</p>
+            <p class="kicker reveal">Z garażu</p>
+            <h2 id="gallery-title" class="section-title reveal">Zobacz, co<br /><span>wyjechało.</span></h2>
+            <p class="reveal">Prawdziwe kadry z pracy — przed, w trakcie i po. Bez zdjęć katalogowych.</p>
           </div>
 
-          <div class="proof-grid">
+          <div class="garage-gallery reveal" aria-labelledby="gallery-title">
+            <div class="gallery-grid">
+              <button
+                class="gallery-frame gallery-frame-main"
+                type="button"
+                data-gallery-index="0"
+                aria-haspopup="dialog"
+                aria-controls="gallery-lightbox"
+                aria-label="Powiększ zdjęcie 1 z 5: dwa auta ustawione w garażu"
+              >
+                <img src="assets/gallery-01.jpg" alt="Białe i czarne auto ustawione w garażu" width="1170" height="715" loading="lazy" decoding="async" />
+                <span class="gallery-frame-number">01 / 05</span>
+                <span class="gallery-frame-caption">Dwa auta. Jeden garaż.</span>
+                <span class="gallery-frame-open" aria-hidden="true">Powiększ ↗</span>
+              </button>
+
+              <button
+                class="gallery-frame gallery-frame-tall"
+                type="button"
+                data-gallery-index="1"
+                aria-haspopup="dialog"
+                aria-controls="gallery-lightbox"
+                aria-label="Powiększ zdjęcie 2 z 5: czerwone auto po pielęgnacji"
+              >
+                <img src="assets/gallery-02.jpg" alt="Czerwone auto pokazane z przodu i z tyłu" width="480" height="640" loading="lazy" decoding="async" />
+                <span class="gallery-frame-number">02 / 05</span>
+                <span class="gallery-frame-caption">Lakier w świetle dziennym.</span>
+                <span class="gallery-frame-open" aria-hidden="true">Powiększ ↗</span>
+              </button>
+
+              <button
+                class="gallery-frame gallery-frame-tall"
+                type="button"
+                data-gallery-index="2"
+                aria-haspopup="dialog"
+                aria-controls="gallery-lightbox"
+                aria-label="Powiększ zdjęcie 3 z 5: wnętrze przed czyszczeniem"
+              >
+                <img src="assets/gallery-03.jpg" alt="Zabrudzone wnętrze auta przed czyszczeniem" width="480" height="640" loading="lazy" decoding="async" />
+                <span class="gallery-frame-number">03 / 05</span>
+                <span class="gallery-frame-caption">Wnętrze przed pracą.</span>
+                <span class="gallery-frame-open" aria-hidden="true">Powiększ ↗</span>
+              </button>
+
+              <button
+                class="gallery-frame gallery-frame-detail"
+                type="button"
+                data-gallery-index="3"
+                aria-haspopup="dialog"
+                aria-controls="gallery-lightbox"
+                aria-label="Powiększ zdjęcie 4 z 5: ślady na czarnym lakierze"
+              >
+                <img src="assets/gallery-04.jpg" alt="Drobne zarysowania czarnego lakieru przy klapce wlewu" width="640" height="480" loading="lazy" decoding="async" />
+                <span class="gallery-frame-number">04 / 05</span>
+                <span class="gallery-frame-caption">Lakier przed korektą.</span>
+                <span class="gallery-frame-open" aria-hidden="true">Powiększ ↗</span>
+              </button>
+
+              <button
+                class="gallery-frame gallery-frame-wide"
+                type="button"
+                data-gallery-index="4"
+                aria-haspopup="dialog"
+                aria-controls="gallery-lightbox"
+                aria-label="Powiększ zdjęcie 5 z 5: reflektor przed odświeżeniem"
+              >
+                <img src="assets/gallery-05.jpg" alt="Zbliżenie na zmatowiony reflektor samochodowy" width="640" height="335" loading="lazy" decoding="async" />
+                <span class="gallery-frame-number">05 / 05</span>
+                <span class="gallery-frame-caption">Detal przed odświeżeniem.</span>
+                <span class="gallery-frame-open" aria-hidden="true">Powiększ ↗</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="gallery-proof-row reveal">
             <a
-              class="proof-card proof-instagram reveal"
+              class="gallery-proof gallery-proof-instagram"
               href="https://www.instagram.com/od_staroscidonowosci/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Zobacz bieżące realizacje na Instagramie — otwiera nową kartę"
+              aria-label="Zobacz więcej realizacji na Instagramie — otwiera nową kartę"
             >
-              <div class="proof-card-top">
-                <span>01 / Bieżące realizacje</span>
-                <img src="assets/instagram-avatar.jpg" alt="" width="100" height="100" />
-              </div>
-              <strong>Instagram</strong>
-              <p>@od_staroscidonowosci</p>
-              <span class="proof-link">Otwórz profil <i aria-hidden="true">↗</i></span>
+              <img src="assets/instagram-avatar.jpg" alt="" width="100" height="100" />
+              <span><small>Więcej realizacji</small><strong>Instagram</strong></span>
+              <i aria-hidden="true">↗</i>
             </a>
 
             <a
-              class="proof-card proof-google reveal"
+              class="gallery-proof gallery-proof-google"
               href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Zobacz lokalizację i opinie w Google — otwiera nową kartę"
             >
-              <div class="proof-card-top"><span>02 / Opinie</span><span class="proof-seal">Google 5,0</span></div>
-              <strong>Google</strong>
-              <p>Myjnia Okuniew — OdStarościDoNowości</p>
-              <span class="proof-link">Otwórz wizytówkę <i aria-hidden="true">↗</i></span>
+              <span><small>Opinie klientów</small><strong>Google 5,0</strong></span>
+              <i aria-hidden="true">↗</i>
             </a>
           </div>
         </div>
@@ -401,6 +488,57 @@
         </div>
       </section>
     </main>
+
+    <dialog
+      id="gallery-lightbox"
+      class="gallery-lightbox"
+      aria-labelledby="lightbox-title"
+      aria-describedby="lightbox-caption"
+      data-gallery-lightbox
+    >
+      <div class="lightbox-shell">
+        <header class="lightbox-topbar">
+          <div>
+            <span>OLD2NEW / stykówka</span>
+            <strong id="lightbox-title">Karta realizacji</strong>
+          </div>
+          <button class="lightbox-close" type="button" data-gallery-close aria-label="Zamknij galerię">
+            <span aria-hidden="true"></span>
+          </button>
+        </header>
+
+        <figure class="lightbox-figure">
+          <div class="lightbox-image-wrap" data-gallery-swipe>
+            <img data-gallery-image alt="" width="1170" height="715" />
+          </div>
+          <figcaption id="lightbox-caption" data-gallery-caption></figcaption>
+        </figure>
+
+        <div class="lightbox-controls" aria-label="Nawigacja galerii">
+          <button class="indicator-button indicator-previous" type="button" data-gallery-previous aria-label="Poprzednie zdjęcie">
+            <span class="indicator-lamp" aria-hidden="true"><i></i></span>
+          </button>
+
+          <div class="gallery-speedometer" aria-hidden="true">
+            <div class="speedometer-face">
+              <span class="speedometer-tick speedometer-tick-0">0</span>
+              <span class="speedometer-tick speedometer-tick-1">25</span>
+              <span class="speedometer-tick speedometer-tick-2">50</span>
+              <span class="speedometer-tick speedometer-tick-3">75</span>
+              <span class="speedometer-tick speedometer-tick-4">100</span>
+              <i class="speedometer-needle"></i>
+              <i class="speedometer-hub"></i>
+              <strong data-gallery-counter>01 / 05</strong>
+            </div>
+          </div>
+
+          <button class="indicator-button indicator-next" type="button" data-gallery-next aria-label="Następne zdjęcie">
+            <span class="indicator-lamp" aria-hidden="true"><i></i></span>
+          </button>
+        </div>
+      </div>
+      <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-gallery-status></p>
+    </dialog>
 
     <footer class="footer">
       <div class="container footer-wrap">

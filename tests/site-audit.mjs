@@ -41,6 +41,26 @@ const unsafeBlankLinks = blankLinks.filter((tag) => !/rel=["'][^"']*noopener[^"'
 check(unsafeBlankLinks.length === 0, "Linki w nowej karcie mają noopener i noreferrer");
 
 const imageTags = matches(html, /<img\b[^>]*>/g).map((match) => match[0]);
+const emptyImageSources = imageTags.filter((tag) => /\bsrc=["']["']/.test(tag));
+check(emptyImageSources.length === 0, "Zaden img nie ma pustego src");
+
+const galleryButtons = matches(html, /<button\b[^>]*\bdata-gallery-index=["'](\d+)["'][^>]*>/g);
+check(
+  galleryButtons.length === 5 && galleryButtons.every((match, index) => Number(match[1]) === index),
+  "Galeria ma piec kolejnych, dostepnych kadrow",
+);
+check(
+  /<dialog\b[^>]*\bid=["']gallery-lightbox["']/.test(html) &&
+    /data-gallery-previous[^>]*aria-label=/.test(html) &&
+    /data-gallery-next[^>]*aria-label=/.test(html) &&
+    /data-gallery-status/.test(html),
+  "Lightbox ma semantyczny dialog, opisane kierunkowskazy i komunikaty live",
+);
+check(
+  /data-menu-car[^>]*data-src=["']assets\/menu-car-driving\.png["']/.test(html) &&
+    /data-menu-car[^>]*data-src=["']assets\/menu-car-crashed\.png["']/.test(html),
+  "Menu ma oba warianty aut do sceny otwarcia i zamkniecia",
+);
 check(imageTags.every((tag) => /\balt=["'][^"']*["']/.test(tag)), "Każdy img ma atrybut alt");
 check(imageTags.every((tag) => /\bwidth=["']\d+["']/.test(tag) && /\bheight=["']\d+["']/.test(tag)), "Każdy img ma width i height");
 
@@ -60,6 +80,15 @@ check(!/(?:MISJA_|GARAGE SYSTEM|hero-minimap|loader-reticle|VT323|arcade|garażo
 check(/@media\s*\(max-width:\s*340px\)/.test(css) && /orientation:\s*landscape/.test(css), "CSS obejmuje wąskie telefony i orientację poziomą");
 
 const heroPath = resolve(root, "assets/garage-hero.jpg");
+const newVisualAssets = [
+  "assets/menu-car-driving.png",
+  "assets/menu-car-crashed.png",
+  ...Array.from({ length: 5 }, (_, index) => `assets/gallery-0${index + 1}.jpg`),
+];
+check(
+  newVisualAssets.every((asset) => existsSync(resolve(root, asset)) && statSync(resolve(root, asset)).size < 600_000),
+  "Nowe obrazy galerii i menu sa lokalne oraz lekkie",
+);
 check(existsSync(heroPath) && statSync(heroPath).size < 500_000, "Hero waży mniej niż 500 kB");
 check((css.match(/{/g) ?? []).length === (css.match(/}/g) ?? []).length, "Liczba nawiasów CSS się zgadza");
 

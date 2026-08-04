@@ -92,6 +92,8 @@ const viewports = [
   { name: "430x932", width: 430, height: 932 },
   { name: "568x320", width: 568, height: 320 },
   { name: "844x390", width: 844, height: 390 },
+  { name: "1024x768", width: 1024, height: 768, mobile: false },
+  { name: "1440x900", width: 1440, height: 900, mobile: false },
 ];
 
 const reports = [];
@@ -103,9 +105,12 @@ for (const viewport of viewports) {
     screenWidth: viewport.width,
     screenHeight: viewport.height,
     deviceScaleFactor: 1,
-    mobile: true,
+    mobile: viewport.mobile ?? true,
   });
-  await send("Emulation.setTouchEmulationEnabled", { enabled: true, maxTouchPoints: 5 });
+  await send("Emulation.setTouchEmulationEnabled", {
+    enabled: viewport.mobile ?? true,
+    maxTouchPoints: viewport.mobile === false ? 1 : 5,
+  });
 
   const loaded = waitForEvent("Page.loadEventFired");
   await send("Page.navigate", { url: pageUrl });
@@ -127,7 +132,8 @@ for (const viewport of viewports) {
     const selectors = [
       '.site-header', '.hero-content', '.hero h1', '.hero-actions', '.ticker-track',
       '.intro-grid', '.section-head', '.service-list', '.process-layout', '.work-order',
-      '.proof-head', '.proof-card', '.contact-wrap', '.contact-details', '.contact-actions',
+      '.proof-head', '.garage-gallery', '.gallery-proof-row',
+      '.contact-wrap', '.contact-details', '.contact-actions',
       '.footer-wrap'
     ];
     const clipped = [...document.querySelectorAll(selectors.join(','))]
@@ -160,26 +166,58 @@ for (const viewport of viewports) {
     };
   })()`);
 
-  const menu = await evaluate(`(() => {
-    const toggle = document.querySelector('.menu-toggle');
-    const nav = document.querySelector('.nav-menu');
-    toggle.click();
-    const linkHeights = [...nav.querySelectorAll('a')].map((link) => link.getBoundingClientRect().height);
-    const open = {
-      expanded: toggle.getAttribute('aria-expanded'),
-      visible: getComputedStyle(nav).visibility,
-      overflowY: getComputedStyle(nav).overflowY,
-      clientHeight: nav.clientHeight,
-      scrollHeight: nav.scrollHeight,
-      linkHeights,
-    };
-    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-    return {
-      open,
-      closed: toggle.getAttribute('aria-expanded') === 'false' && !nav.classList.contains('open'),
-      focusReturned: document.activeElement === toggle,
-    };
-  })()`);
+  let menu;
+  if (viewport.width <= 900) {
+    menu = await evaluate(`(() => {
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav-menu');
+      toggle.click();
+      const linkHeights = [...nav.querySelectorAll('a')].map((link) => link.getBoundingClientRect().height);
+      const open = {
+        expanded: toggle.getAttribute('aria-expanded'),
+        visible: getComputedStyle(nav).visibility,
+        overflowY: getComputedStyle(nav).overflowY,
+        clientHeight: nav.clientHeight,
+        scrollHeight: nav.scrollHeight,
+        linkHeights,
+      };
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      toggle.click();
+      const rapidReopen =
+        toggle.getAttribute('aria-expanded') === 'true' &&
+        nav.classList.contains('open') &&
+        !nav.classList.contains('is-closing');
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      return {
+        mode: 'mobile',
+        open,
+        rapidReopen,
+        closed: toggle.getAttribute('aria-expanded') === 'false' && !nav.classList.contains('open'),
+        focusReturned: document.activeElement === toggle,
+      };
+    })()`);
+    await delay(720);
+    if (viewport.name === "390x844" || viewport.name === "844x390") {
+      await evaluate("document.querySelector('.menu-toggle').click(); true");
+      await delay(480);
+      await capture(`${viewport.name}-menu-open.png`);
+      await evaluate("document.querySelector('.menu-toggle').click(); true");
+      await delay(420);
+      await capture(`${viewport.name}-menu-closing.png`);
+      await delay(300);
+    }
+  } else {
+    menu = await evaluate(`(() => {
+      const toggle = document.querySelector('.menu-toggle');
+      const nav = document.querySelector('.nav-menu');
+      return {
+        mode: 'desktop',
+        toggleHidden: getComputedStyle(toggle).display === 'none',
+        navVisible: getComputedStyle(nav).visibility === 'visible',
+        linkHeights: [...nav.querySelectorAll('a')].map((link) => link.getBoundingClientRect().height),
+      };
+    })()`);
+  }
 
   const sections = ["start", "o-mnie", "zakres", "jak-to-dziala", "realizacje", "kontakt"];
   for (const section of sections) {
@@ -188,14 +226,106 @@ for (const viewport of viewports) {
     await capture(`${viewport.name}-${section}.png`);
   }
 
+  await evaluate("document.getElementById('realizacje').scrollIntoView({ behavior: 'instant' }); true");
+  await delay(100);
+  const gallery = await evaluate(`(() => {
+    const trigger = document.querySelector('[data-gallery-index="2"]');
+    const dialog = document.querySelector('[data-gallery-lightbox]');
+    trigger.click();
+    const controls = [...dialog.querySelectorAll('button')].map((button) => {
+      const rect = button.getBoundingClientRect();
+      return { width: rect.width, height: rect.height, top: rect.top, bottom: rect.bottom };
+    });
+    const opened = {
+      open: dialog.open,
+      modal: dialog.matches(':modal'),
+      focusOnClose: document.activeElement === dialog.querySelector('[data-gallery-close]'),
+      counter: dialog.querySelector('[data-gallery-counter]').textContent.trim(),
+      imageSource: dialog.querySelector('[data-gallery-image]').getAttribute('src'),
+      controls,
+      fits: dialog.getBoundingClientRect().width <= innerWidth && dialog.getBoundingClientRect().height <= innerHeight,
+    };
+    dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
+    const afterRight = dialog.querySelector('[data-gallery-counter]').textContent.trim();
+    dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Home', bubbles: true }));
+    const afterHome = dialog.querySelector('[data-gallery-counter]').textContent.trim();
+    dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    const afterEnd = dialog.querySelector('[data-gallery-counter]').textContent.trim();
+    const swipeArea = dialog.querySelector('[data-gallery-swipe]');
+    const swipeRect = swipeArea.getBoundingClientRect();
+    swipeArea.dispatchEvent(new PointerEvent('pointerdown', {
+      bubbles: true,
+      isPrimary: true,
+      pointerId: 77,
+      pointerType: 'touch',
+      clientX: swipeRect.right - 20,
+      clientY: swipeRect.top + swipeRect.height / 2,
+    }));
+    swipeArea.dispatchEvent(new PointerEvent('pointerup', {
+      bubbles: true,
+      isPrimary: true,
+      pointerId: 77,
+      pointerType: 'touch',
+      clientX: swipeRect.left + 20,
+      clientY: swipeRect.top + swipeRect.height / 2,
+    }));
+    const afterSwipe = dialog.querySelector('[data-gallery-counter]').textContent.trim();
+    dialog.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    return new Promise((resolve) => requestAnimationFrame(() => resolve({
+      opened,
+      afterRight,
+      afterHome,
+      afterEnd,
+      afterSwipe,
+      closed: !dialog.open,
+      focusReturned: document.activeElement === trigger,
+    })));
+  })()`);
+  if (viewport.name === "390x844" || viewport.name === "844x390" || viewport.name === "1440x900") {
+    await evaluate("document.querySelector('[data-gallery-index=\"0\"]').click(); true");
+    await delay(120);
+    await capture(`${viewport.name}-gallery-lightbox.png`);
+    await evaluate("document.querySelector('[data-gallery-close]').click(); true");
+  }
+
   const finalState = await evaluate(`({
     pageHeight: document.documentElement.scrollHeight,
     visibleReveal: document.querySelectorAll('.reveal.is-visible').length,
     totalReveal: document.querySelectorAll('.reveal').length,
   })`);
 
-  reports.push({ viewport: viewport.name, layout, menu, finalState });
+  reports.push({ viewport: viewport.name, layout, menu, gallery, finalState });
 }
+
+await send("Emulation.setDeviceMetricsOverride", {
+  width: 390,
+  height: 844,
+  screenWidth: 390,
+  screenHeight: 844,
+  deviceScaleFactor: 1,
+  mobile: true,
+});
+await send("Emulation.setEmulatedMedia", {
+  features: [{ name: "prefers-reduced-motion", value: "reduce" }],
+});
+const reducedLoaded = waitForEvent("Page.loadEventFired");
+await send("Page.navigate", { url: `${pageUrl}&reduced=1` });
+await reducedLoaded;
+const reducedMotionReport = await evaluate(`(() => {
+  const toggle = document.querySelector('.menu-toggle');
+  const nav = document.querySelector('.nav-menu');
+  toggle.click();
+  const opened = nav.classList.contains('open');
+  toggle.click();
+  return {
+    mediaMatches: matchMedia('(prefers-reduced-motion: reduce)').matches,
+    opened,
+    closedImmediately:
+      !nav.classList.contains('open') &&
+      !nav.classList.contains('is-closing') &&
+      !document.body.classList.contains('menu-open'),
+  };
+})()`);
 
 const failures = [];
 for (const report of reports) {
@@ -203,13 +333,31 @@ for (const report of reports) {
   if (report.layout.bodyScrollWidth > report.layout.viewport.width) failures.push(`${report.viewport}: poziomy overflow body`);
   if (report.layout.clipped.length) failures.push(`${report.viewport}: elementy poza viewportem ${JSON.stringify(report.layout.clipped)}`);
   if (report.layout.smallTargets.length) failures.push(`${report.viewport}: cele dotykowe <44 px ${JSON.stringify(report.layout.smallTargets)}`);
-  if (report.menu.open.expanded !== "true" || report.menu.open.visible !== "visible") failures.push(`${report.viewport}: menu nie otwiera się poprawnie`);
-  if (!report.menu.closed || !report.menu.focusReturned) failures.push(`${report.viewport}: menu nie zamyka się poprawnie`);
-  if (report.menu.open.linkHeights.some((height) => height < 44)) failures.push(`${report.viewport}: link menu <44 px`);
+  if (report.menu.mode === "mobile") {
+    if (report.menu.open.expanded !== "true" || report.menu.open.visible !== "visible") failures.push(`${report.viewport}: menu nie otwiera się poprawnie`);
+    if (!report.menu.rapidReopen) failures.push(`${report.viewport}: szybkie ponowne otwarcie menu nie dziala`);
+    if (!report.menu.closed || !report.menu.focusReturned) failures.push(`${report.viewport}: menu nie zamyka się poprawnie`);
+    if (report.menu.open.linkHeights.some((height) => height < 44)) failures.push(`${report.viewport}: link menu <44 px`);
+  } else if (!report.menu.toggleHidden || !report.menu.navVisible || report.menu.linkHeights.some((height) => height < 44)) {
+    failures.push(`${report.viewport}: nawigacja desktopowa nie jest poprawnie widoczna`);
+  }
 }
 if (browserErrors.length) failures.push(`Błędy przeglądarki: ${browserErrors.join(" | ")}`);
 
-console.log(JSON.stringify({ reports, browserErrors, failures }, null, 2));
+for (const report of reports) {
+  if (!report.gallery.opened.open || !report.gallery.opened.modal || !report.gallery.opened.focusOnClose) failures.push(`${report.viewport}: lightbox nie otwiera sie jako modal z prawidlowym focusem`);
+  if (report.gallery.opened.counter !== "03 / 05" || !report.gallery.opened.imageSource) failures.push(`${report.viewport}: lightbox nie wczytuje wybranego kadru`);
+  if (report.gallery.afterRight !== "04 / 05" || report.gallery.afterHome !== "01 / 05" || report.gallery.afterEnd !== "05 / 05" || report.gallery.afterSwipe !== "01 / 05") failures.push(`${report.viewport}: nawigacja galerii nie dziala`);
+  if (!report.gallery.closed || !report.gallery.focusReturned) failures.push(`${report.viewport}: lightbox nie zamyka sie z powrotem do miniatury`);
+  if (!report.gallery.opened.fits) failures.push(`${report.viewport}: lightbox wykracza poza viewport`);
+  if (report.gallery.opened.controls.some(({ width, height }) => width < 44 || height < 44)) failures.push(`${report.viewport}: kontrolka lightboxa mniejsza niz 44 px`);
+  if (report.gallery.opened.controls.some(({ top, bottom }) => top < 0 || bottom > report.layout.viewport.height)) failures.push(`${report.viewport}: kontrolka lightboxa jest poza widocznym obszarem`);
+}
+if (!reducedMotionReport.mediaMatches || !reducedMotionReport.opened || !reducedMotionReport.closedImmediately) {
+  failures.push("prefers-reduced-motion: menu nie zamyka sie natychmiast");
+}
+
+console.log(JSON.stringify({ reports, reducedMotionReport, browserErrors, failures }, null, 2));
 await send("Browser.close");
 
 if (failures.length) process.exitCode = 1;
