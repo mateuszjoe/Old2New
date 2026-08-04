@@ -8,6 +8,7 @@ bieżące realizacje i szybki kontakt bez wymyślonego cennika.
 - ciemny, oldschoolowy garaż po godzinach,
 - motoryzacyjny klimat przełomu lat 90. i 00. bez kopiowania interfejsów gier,
 - mocny wordmark OLD2NEW i oszczędna paleta kości słoniowej, grafitu i oxblood,
+- własny system znaku: pełne OLD2NEW w nagłówku i stopce oraz skrót O2N w faviconie,
 - krótka animacja mycia kreskówkowej beemki, pokazywana najwyżej raz na dobę,
 - boczna kreskówkowa beemka w burgerze: wjazd przy otwarciu i garażowa scena kolizji przy zamknięciu,
 - analogowa karta przyjęcia auta jako własny motyw strony,

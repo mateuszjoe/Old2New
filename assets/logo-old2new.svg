@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-4 -4 470 108" role="img" aria-labelledby="title desc">
+  <title id="title">OLD2NEW</title>
+  <desc id="desc">OLD2NEW mark: worn OLD letters transition through a rust-red 2 into clean NEW letters.</desc>
+  <defs>
+    <mask id="worn-old" maskUnits="userSpaceOnUse" x="0" y="0" width="176" height="100">
+      <rect width="176" height="100" fill="#fff" />
+      <g fill="#000">
+        <path d="M-4 28 51 20l1 5-55 8z" />
+        <path d="m9 52 42-6 1 4-42 7z" />
+        <path d="m-2 75 36-5 1 5-36 5z" />
+        <path d="m57 35 47-6 1 5-47 6z" />
+        <path d="m66 65 43-7 1 5-43 7z" />
+        <path d="m113 31 30-4 1 5-31 4z" />
+        <path d="m116 59 54-8 1 5-54 8z" />
+        <path d="m136 78 38-6 1 5-38 6z" />
+      </g>
+    </mask>
+  </defs>
+
+  <g fill="#a8a298" mask="url(#worn-old)">
+    <path fill-rule="evenodd" d="M9 14h32l9 9v54l-9 9H9l-9-9V23l9-9Zm7 15v42h18V29H16Z" />
+    <path d="M59 14h16v56h32v16H59V14Z" />
+    <path fill-rule="evenodd" d="M116 14h29c20 0 30 12 30 36s-10 36-30 36h-29V14Zm16 15v42h11c10 0 16-7 16-21s-6-21-16-21h-11Z" />
+  </g>
+
+  <g fill="#a94336" opacity=".9">
+    <path d="m1 31 28-4 .6 3.2-28 4z" />
+    <path d="m15 72 20 3-.5 3-20-3z" />
+    <path d="m61 62 22-3 .5 3-22 3z" />
+    <path d="m117 56 21-3 .5 3-21 3z" />
+  </g>
+
+  <path fill="#a94336" d="M177 35c0-17 11-27 29-27 19 0 30 10 30 26 0 13-6 22-18 31l-17 14h37v17h-64V80l32-27c9-7 13-13 13-19 0-7-4-11-12-11-9 0-14 5-14 14l-16-2Z" />
+
+  <g fill="#ded8cc">
+    <path d="M243 14h16l25 44V14h16v72h-16l-25-44v44h-16V14Z" />
+    <path d="M310 14h54v15h-38v13h33v15h-33v14h38v15h-54V14Z" />
+    <path d="M371 14h17l10 49 11-49h15l11 49 10-49h17l-17 72h-18l-11-45-11 45h-18l-16-72Z" />
+  </g>
+</svg>

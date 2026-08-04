@@ -46,6 +46,16 @@ check(emptyImageSources.length === 0, "Zaden img nie ma pustego src");
 
 const galleryButtons = matches(html, /<button\b[^>]*\bdata-gallery-index=["'](\d+)["'][^>]*>/g);
 check(
+  /rel=["']icon["'][^>]*href=["']assets\/favicon-o2n\.svg["']/.test(html) &&
+    /href=["']assets\/favicon-32\.png["'][^>]*sizes=["']32x32["']/.test(html),
+  "Favicon O2N ma wariant SVG i fallback PNG",
+);
+check(
+  (html.match(/src=["']assets\/logo-old2new\.svg["']/g) ?? []).length === 2 &&
+    (html.match(/src=["']assets\/instagram-avatar\.jpg["']/g) ?? []).length === 1,
+  "Header i footer uzywaja jednego wordmarku OLD2NEW",
+);
+check(
   galleryButtons.length === 5 && galleryButtons.every((match, index) => Number(match[1]) === index),
   "Galeria ma piec kolejnych, dostepnych kadrow",
 );

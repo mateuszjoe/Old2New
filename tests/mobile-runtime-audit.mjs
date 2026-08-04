@@ -226,6 +226,9 @@ for (const viewport of viewports) {
     await delay(180);
     await capture(`${viewport.name}-${section}.png`);
   }
+  await evaluate("document.querySelector('footer').scrollIntoView({ behavior: 'instant' }); true");
+  await delay(100);
+  await capture(`${viewport.name}-footer.png`);
 
   await evaluate("document.getElementById('realizacje').scrollIntoView({ behavior: 'instant' }); true");
   await delay(100);
