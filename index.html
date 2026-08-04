@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0b0b09" />
+    <script>
+      document.documentElement.classList.add("js");
+      try {
+        if (sessionStorage.getItem("old2new-intro-seen")) {
+          document.documentElement.classList.add("intro-seen");
+        }
+      } catch (error) {}
+    </script>
     <meta
       name="description"
       content="OLD2NEW — ręczna pielęgnacja samochodów i metamorfozy aut wykonywane przez Dawida. Zobacz realizacje i zapytaj o termin."
@@ -19,13 +27,115 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=VT323&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
+    <div class="preloader" data-preloader aria-label="Animowane intro OLD2NEW">
+      <div class="preloader-grid" aria-hidden="true"></div>
+      <div class="loader-topline">
+        <span>OLD<span>2</span>NEW // GARAGE SYSTEM</span>
+        <span>JOB_001</span>
+      </div>
+
+      <div class="wash-stage" aria-hidden="true">
+        <svg class="wash-scene" viewBox="0 0 640 380" role="img" aria-label="Brudne auto jest czyszczone i odzyskuje połysk">
+          <defs>
+            <linearGradient id="loaderPaint" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#676964" />
+              <stop offset=".48" stop-color="#2b2e2d" />
+              <stop offset="1" stop-color="#111312" />
+            </linearGradient>
+            <linearGradient id="loaderGlass" x1="0" x2="1">
+              <stop offset="0" stop-color="#101718" />
+              <stop offset=".5" stop-color="#324042" />
+              <stop offset="1" stop-color="#0c1112" />
+            </linearGradient>
+            <filter id="loaderShadow" x="-40%" y="-30%" width="180%" height="180%">
+              <feGaussianBlur stdDeviation="11" />
+            </filter>
+          </defs>
+
+          <g class="loader-road">
+            <path d="M0 84h640M0 296h640M108 0v380M530 0v380" />
+            <path class="road-dashes" d="M0 190h640M320 0v380" />
+          </g>
+          <ellipse class="loader-car-shadow" cx="320" cy="205" rx="104" ry="161" />
+
+          <g class="loader-car">
+            <g class="loader-wheels">
+              <rect x="228" y="92" width="24" height="70" rx="7" />
+              <rect x="388" y="92" width="24" height="70" rx="7" />
+              <rect x="228" y="247" width="24" height="70" rx="7" />
+              <rect x="388" y="247" width="24" height="70" rx="7" />
+            </g>
+            <path class="loader-car-body" d="M283 31c-20 12-31 46-34 92l-8 162c-2 35 16 57 40 66h78c24-9 42-31 40-66l-8-162c-3-46-14-80-34-92z" />
+            <path class="loader-hood" d="M277 62q43-24 86 0l15 76H262z" />
+            <path class="loader-windshield" d="M270 145h100l-10 58h-80z" />
+            <path class="loader-roof" d="M280 208h80l9 65h-98z" />
+            <path class="loader-rear-glass" d="M273 280h94l-13 39h-68z" />
+            <path class="loader-panel-lines" d="M261 139h118M268 276h104M320 43v89M320 324v20" />
+            <g class="loader-lights">
+              <rect x="269" y="48" width="28" height="10" rx="4" />
+              <rect x="343" y="48" width="28" height="10" rx="4" />
+              <rect x="267" y="327" width="32" height="11" rx="3" />
+              <rect x="341" y="327" width="32" height="11" rx="3" />
+            </g>
+            <g class="loader-grime">
+              <path d="M259 76c20-24 65 1 67 29 2 19-20 28-31 45-19 27-49 0-36-74Z" />
+              <path d="M324 54c28-15 62 14 54 46-7 27-32 18-43 42-10 23-35-13-27-35 6-17-2-43 16-53Z" />
+              <path d="M267 167c18-27 48-9 55 14 6 20-7 42-28 42-31 1-42-32-27-56Z" />
+              <path d="M333 196c28-20 59 9 47 38-9 24-37 15-53 33-16 18-35-13-20-35 9-13 10-25 26-36Z" />
+              <path d="M252 271c18-26 54-7 58 21 3 19-10 38-30 41-27 4-44-39-28-62Z" />
+              <circle cx="355" cy="291" r="28" /><circle cx="292" cy="118" r="15" />
+            </g>
+            <g class="loader-foam">
+              <circle cx="291" cy="91" r="13" /><circle cx="342" cy="110" r="18" />
+              <circle cx="307" cy="175" r="17" /><circle cx="352" cy="221" r="15" />
+              <circle cx="281" cy="255" r="19" /><circle cx="330" cy="302" r="22" />
+              <circle cx="366" cy="276" r="11" />
+            </g>
+            <g class="loader-shine">
+              <path d="M270 98 352 61M264 132l109-48M277 254l91-39" />
+              <path class="shine-star" d="M373 119v34m-17-17h34M283 286v24m-12-12h24" />
+            </g>
+          </g>
+
+          <g class="loader-cloth">
+            <path d="M0 5c11-8 27 4 39-2 12-5 27 3 28 17l-4 37c-13 8-25-2-36 4-12 7-27 0-28-14Z" />
+            <path d="m10 15 43 30M17 5l41 27" />
+          </g>
+
+          <g class="loader-washer">
+            <path class="washer-hose" d="M606 354c-2-74-11-130-54-167" />
+            <path class="washer-gun" d="m522 150 54 55-12 13-54-56Zm47 58 22 10" />
+            <path class="water-jet" d="M519 157 372 92M520 158 382 125M519 158 373 109" />
+            <g class="water-drops">
+              <circle cx="466" cy="137" r="3" /><circle cx="438" cy="119" r="4" />
+              <circle cx="407" cy="107" r="3" /><circle cx="472" cy="151" r="2" />
+            </g>
+          </g>
+        </svg>
+
+        <div class="loader-reticle"><span></span></div>
+        <div class="loader-status">
+          <span class="status-one">CEL: BRUDNY</span>
+          <span class="status-two">SZOROWANIE...</span>
+          <span class="status-three">CIŚNIENIE: 140 BAR</span>
+          <span class="status-four">EFEKT: OLD2NEW</span>
+        </div>
+      </div>
+
+      <div class="loader-bottomline">
+        <div class="loader-progress"><span></span></div>
+        <span>ŁADOWANIE GARAŻU</span>
+      </div>
+      <button class="loader-skip" type="button" data-skip-intro>Pomiń intro [ESC]</button>
+    </div>
+
     <a class="skip-link" href="#main">Przejdź do treści</a>
 
     <header class="site-header" data-header>
@@ -67,6 +177,11 @@
             <a class="button button-primary" href="#kontakt">Pokaż swoje auto</a>
             <a class="button button-ghost" href="#realizacje">Zobacz robotę</a>
           </div>
+          <div class="mission-panel" aria-label="Status garażu">
+            <span class="mission-label">MISJA_01</span>
+            <strong>PRZYWRÓĆ POŁYSK</strong>
+            <span class="mission-status"><i></i> GARAŻ GOTOWY</span>
+          </div>
           <p class="scribble hero-note" aria-hidden="true">
             robię tak, jakbym robił dla siebie
             <svg viewBox="0 0 130 64" role="presentation">
@@ -76,6 +191,17 @@
         </div>
         <div class="hero-stamp" aria-hidden="true">
           <span>Ręczna robota</span><strong>01</strong><span>Garażowy klimat</span>
+        </div>
+        <div class="hero-minimap" aria-hidden="true">
+          <span class="map-coords">X: 021 / Y: 997</span>
+          <svg viewBox="0 0 150 150" role="presentation">
+            <circle cx="75" cy="75" r="70" />
+            <path class="map-streets" d="M8 57h42l18-20v-29m74 38h-35L89 65v77M9 104h33l27 22h73M39 9v29l26 21h44l33 31" />
+            <path class="map-route" d="M24 105 48 86 64 91 83 66 114 47" />
+            <circle class="map-point" cx="24" cy="105" r="5" />
+            <path class="map-arrow" d="m114 39 9 17-18-3Z" />
+          </svg>
+          <span class="map-caption">TRASA DO EFEKTU</span>
         </div>
       </section>
 

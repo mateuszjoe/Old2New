@@ -5,6 +5,8 @@ Strona demonstracyjna dla **Dawid.Garage — Od Starości Do Nowości**.
 ## Założenia
 
 - oldschoolowy, garażowy charakter,
+- klimat top-downowego miejskiego arcade i garażowy HUD,
+- wektorowe intro: brudne auto, ścierka, myjka ciśnieniowa i końcowy połysk,
 - prosta strona typu one-page,
 - szybki kontakt przez Instagram i wizytówkę Google,
 - responsywny układ i lekkie animacje,
