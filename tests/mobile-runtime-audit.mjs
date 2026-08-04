@@ -123,6 +123,32 @@ for (const viewport of viewports) {
   await delay(600);
   await evaluate("scrollTo(0, 0); true");
 
+  if (outputDirectory && (viewport.name === "390x844" || viewport.name === "1440x900")) {
+    for (let heroIndex = 0; heroIndex < 4; heroIndex += 1) {
+      await evaluate(`(async () => {
+        const slides = [...document.querySelectorAll('[data-hero-slide]')];
+        const image = slides[${heroIndex}]?.querySelector('img');
+        if (!image.getAttribute('src') && image.dataset.src) image.src = image.dataset.src;
+        try { await image.decode(); } catch (error) {}
+        slides.forEach((slide, index) => {
+          slide.style.transition = 'none';
+          slide.classList.toggle('is-active', index === ${heroIndex});
+        });
+        return true;
+      })()`);
+      await delay(90);
+      await capture(`${viewport.name}-hero-0${heroIndex + 1}.png`);
+    }
+    await evaluate(`(() => {
+      const slides = [...document.querySelectorAll('[data-hero-slide]')];
+      slides.forEach((slide, index) => {
+        slide.classList.toggle('is-active', index === 0);
+        slide.style.removeProperty('transition');
+      });
+      return true;
+    })()`);
+  }
+
   const layout = await evaluate(`(() => {
     const isRendered = (element) => {
       const style = getComputedStyle(element);
@@ -155,14 +181,43 @@ for (const viewport of viewports) {
       .map(({ label, rect }) => ({ label, width: rect.width, height: rect.height }));
     const hero = document.querySelector('.hero').getBoundingClientRect();
     const actions = document.querySelector('.hero-actions').getBoundingClientRect();
+    const activeHeroSlide = document.querySelector('[data-hero-slide].is-active');
+    const heroImage = activeHeroSlide?.querySelector('img');
+    const heroImageRect = heroImage?.getBoundingClientRect();
+    const heroImageStyle = heroImage ? getComputedStyle(heroImage) : null;
     return {
       viewport: { width: innerWidth, height: innerHeight },
       scrollWidth: document.documentElement.scrollWidth,
       bodyScrollWidth: document.body.scrollWidth,
       heroHeight: hero.height,
       heroActionsBottom: actions.bottom,
+      heroMedia: {
+        slideCount: document.querySelectorAll('[data-hero-slide]').length,
+        activeCount: document.querySelectorAll('[data-hero-slide].is-active').length,
+        imageTop: heroImageRect?.top,
+        imageBottom: heroImageRect?.bottom,
+        imageWidth: heroImageRect?.width,
+        imageHeight: heroImageRect?.height,
+        objectFit: heroImageStyle?.objectFit,
+        objectPosition: heroImageStyle?.objectPosition,
+      },
       clipped,
       smallTargets,
+    };
+  })()`);
+
+  const heroMotion = await evaluate(`(() => {
+    const control = document.querySelector('[data-hero-motion]');
+    const images = [...document.querySelectorAll('[data-hero-slide] img')];
+    const visible = control && !control.hidden && getComputedStyle(control).display !== 'none';
+    if (visible) control.click();
+    const paused = control?.getAttribute('aria-pressed');
+    if (visible) control.click();
+    return {
+      visible,
+      paused,
+      resumed: control?.getAttribute('aria-pressed'),
+      hydratedSlides: images.filter((image) => image.hasAttribute('src')).length,
     };
   })()`);
 
@@ -298,8 +353,39 @@ for (const viewport of viewports) {
     totalReveal: document.querySelectorAll('.reveal').length,
   })`);
 
-  reports.push({ viewport: viewport.name, layout, menu, gallery, finalState });
+  reports.push({ viewport: viewport.name, layout, heroMotion, menu, gallery, finalState });
 }
+
+await send("Emulation.setDeviceMetricsOverride", {
+  width: 390,
+  height: 844,
+  screenWidth: 390,
+  screenHeight: 844,
+  deviceScaleFactor: 1,
+  mobile: true,
+});
+await send("Emulation.setEmulatedMedia", { features: [] });
+const heroTimingLoaded = waitForEvent("Page.loadEventFired");
+await send("Page.navigate", { url: `${pageUrl}&hero-timing=1` });
+await heroTimingLoaded;
+await evaluate("document.querySelector('[data-skip-intro]')?.click(); true");
+await delay(650);
+const heroTimingStart = await evaluate(
+  "[...document.querySelectorAll('[data-hero-slide]')].findIndex((slide) => slide.classList.contains('is-active'))",
+);
+await delay(18_500);
+const heroTimingBeforeDeadline = await evaluate(
+  "[...document.querySelectorAll('[data-hero-slide]')].findIndex((slide) => slide.classList.contains('is-active'))",
+);
+await delay(1_500);
+const heroTimingAfterDeadline = await evaluate(
+  "[...document.querySelectorAll('[data-hero-slide]')].findIndex((slide) => slide.classList.contains('is-active'))",
+);
+const heroTimingReport = {
+  start: heroTimingStart,
+  beforeDeadline: heroTimingBeforeDeadline,
+  afterDeadline: heroTimingAfterDeadline,
+};
 
 await send("Emulation.setDeviceMetricsOverride", {
   width: 390,
@@ -328,6 +414,12 @@ const reducedMotionReport = await evaluate(`(() => {
       !nav.classList.contains('open') &&
       !nav.classList.contains('is-closing') &&
       !document.body.classList.contains('menu-open'),
+    heroControlHidden:
+      document.querySelector('[data-hero-motion]').hidden ||
+      getComputedStyle(document.querySelector('[data-hero-motion]')).display === 'none',
+    heroActiveCount: document.querySelectorAll('[data-hero-slide].is-active').length,
+    heroHydratedSlides: [...document.querySelectorAll('[data-hero-slide] img')]
+      .filter((image) => image.hasAttribute('src')).length,
   };
 })()`);
 
@@ -337,6 +429,9 @@ for (const report of reports) {
   if (report.layout.bodyScrollWidth > report.layout.viewport.width) failures.push(`${report.viewport}: poziomy overflow body`);
   if (report.layout.clipped.length) failures.push(`${report.viewport}: elementy poza viewportem ${JSON.stringify(report.layout.clipped)}`);
   if (report.layout.smallTargets.length) failures.push(`${report.viewport}: cele dotykowe <44 px ${JSON.stringify(report.layout.smallTargets)}`);
+  if (report.layout.heroMedia.slideCount !== 4 || report.layout.heroMedia.activeCount !== 1) failures.push(`${report.viewport}: hero nie ma jednego aktywnego kadru z czterech`);
+  if (!report.heroMotion.visible || report.heroMotion.paused !== "true" || report.heroMotion.resumed !== "false") failures.push(`${report.viewport}: pauza hero nie dziala`);
+  if (report.layout.viewport.width <= 680 && report.layout.viewport.height > report.layout.viewport.width && report.layout.heroMedia.imageHeight > 251) failures.push(`${report.viewport}: mobilny kadr hero jest zbyt wysoki`);
   if (report.menu.mode === "mobile") {
     if (report.menu.open.expanded !== "true" || report.menu.open.visible !== "visible" || !report.menu.open.carsHydrated) failures.push(`${report.viewport}: menu nie otwiera się poprawnie`);
     if (!report.menu.rapidReopen) failures.push(`${report.viewport}: szybkie ponowne otwarcie menu nie dziala`);
@@ -360,8 +455,14 @@ for (const report of reports) {
 if (!reducedMotionReport.mediaMatches || !reducedMotionReport.opened || !reducedMotionReport.closedImmediately) {
   failures.push("prefers-reduced-motion: menu nie zamyka sie natychmiast");
 }
+if (!reducedMotionReport.heroControlHidden || reducedMotionReport.heroActiveCount !== 1 || reducedMotionReport.heroHydratedSlides !== 1) {
+  failures.push("prefers-reduced-motion: slideshow hero nie pozostaje statyczny");
+}
+if (heroTimingReport.start !== 0 || heroTimingReport.beforeDeadline !== 0 || heroTimingReport.afterDeadline !== 1) {
+  failures.push(`hero: nie zmienia kadru po 20 s ${JSON.stringify(heroTimingReport)}`);
+}
 
-console.log(JSON.stringify({ reports, reducedMotionReport, browserErrors, failures }, null, 2));
+console.log(JSON.stringify({ reports, heroTimingReport, reducedMotionReport, browserErrors, failures }, null, 2));
 await send("Browser.close");
 
 if (failures.length) process.exitCode = 1;

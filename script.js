@@ -14,6 +14,11 @@ const loaderCar = document.querySelector("[data-loader-car]");
 const skipIntro = document.querySelector("[data-skip-intro]");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobileMenu = window.matchMedia("(max-width: 900px)");
+const heroSlideshow = document.querySelector("[data-hero-slideshow]");
+const heroSlides = [
+  ...(heroSlideshow?.querySelectorAll("[data-hero-slide]") ?? []),
+];
+const heroMotionToggle = document.querySelector("[data-hero-motion]");
 
 const galleryTriggers = [...document.querySelectorAll("[data-gallery-index]")];
 const galleryDialog = document.querySelector("[data-gallery-lightbox]");
@@ -40,6 +45,19 @@ let menuOpen = false;
 let menuClosing = false;
 let menuCloseTimer = 0;
 let lightboxOpen = false;
+let heroIndex = Math.max(
+  0,
+  heroSlides.findIndex((slide) => slide.classList.contains("is-active")),
+);
+let heroTimer = 0;
+let heroTransitionToken = 0;
+let heroPausedByUser = false;
+let heroWarmupScheduled = false;
+
+const HERO_INTERVAL = Math.max(
+  5_000,
+  Number(heroSlideshow?.dataset.heroInterval) || 20_000,
+);
 
 const setElementInert = (element, inert) => {
   if (!element) return;
@@ -61,6 +79,7 @@ const syncPageInert = () => {
   setElementInert(footer, introActive || menuBlocksPage() || lightboxOpen);
   setElementInert(skipLink, introActive || menuBlocksPage() || lightboxOpen);
   syncBodyLocks();
+  syncHeroRotation();
 };
 
 const clearMenuCloseTimer = () => {
@@ -104,6 +123,121 @@ const scheduleMenuCarWarmup = () => {
     window.setTimeout(warmUp, 350);
   }
 };
+
+const heroNetworkBlocksRotation = () => {
+  const connection = navigator.connection;
+  return Boolean(
+    connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || ""),
+  );
+};
+
+const heroCanRotate = () =>
+  heroSlides.length > 1 &&
+  !reducedMotion.matches &&
+  !heroPausedByUser &&
+  !document.hidden &&
+  !introActive &&
+  !lightboxOpen &&
+  !menuBlocksPage() &&
+  !heroNetworkBlocksRotation();
+
+const updateHeroMotionToggle = () => {
+  if (!heroMotionToggle) return;
+
+  const available =
+    heroSlides.length > 1 &&
+    !reducedMotion.matches &&
+    !heroNetworkBlocksRotation();
+
+  heroMotionToggle.hidden = !available;
+  heroMotionToggle.setAttribute("aria-pressed", String(heroPausedByUser));
+  heroMotionToggle.setAttribute(
+    "aria-label",
+    heroPausedByUser
+      ? "Wznów zmianę zdjęć w tle"
+      : "Wstrzymaj zmianę zdjęć w tle",
+  );
+};
+
+const clearHeroTimer = () => {
+  if (heroTimer) window.clearTimeout(heroTimer);
+  heroTimer = 0;
+  heroTransitionToken += 1;
+};
+
+const hydrateHeroSlide = async (slide) => {
+  const image = slide?.querySelector("img");
+  if (!image) return false;
+
+  if (!image.getAttribute("src") && image.dataset.src) {
+    image.fetchPriority = "low";
+    image.setAttribute("src", image.dataset.src);
+  }
+
+  if (!image.getAttribute("src")) return false;
+  if (image.complete) return image.naturalWidth > 0;
+
+  try {
+    if (typeof image.decode === "function") await image.decode();
+    else {
+      await new Promise((resolve, reject) => {
+        image.addEventListener("load", resolve, { once: true });
+        image.addEventListener("error", reject, { once: true });
+      });
+    }
+  } catch (error) {
+    return false;
+  }
+
+  return image.naturalWidth > 0;
+};
+
+const warmNextHeroSlide = () => {
+  if (!heroCanRotate() || heroWarmupScheduled) return;
+  heroWarmupScheduled = true;
+  const nextIndex = (heroIndex + 1) % heroSlides.length;
+
+  const warm = () => {
+    heroWarmupScheduled = false;
+    if (!heroCanRotate()) return;
+    void hydrateHeroSlide(heroSlides[nextIndex]);
+  };
+
+  if ("requestIdleCallback" in window) {
+    window.requestIdleCallback(warm, { timeout: 1200 });
+  } else {
+    window.setTimeout(warm, 250);
+  }
+};
+
+async function advanceHeroSlide() {
+  heroTimer = 0;
+  if (!heroCanRotate()) return;
+
+  const request = ++heroTransitionToken;
+  const nextIndex = (heroIndex + 1) % heroSlides.length;
+  const nextSlide = heroSlides[nextIndex];
+  const ready = await hydrateHeroSlide(nextSlide);
+
+  if (!ready || request !== heroTransitionToken || !heroCanRotate()) {
+    syncHeroRotation();
+    return;
+  }
+
+  heroSlides[heroIndex]?.classList.remove("is-active");
+  nextSlide.classList.add("is-active");
+  heroIndex = nextIndex;
+  syncHeroRotation();
+}
+
+function syncHeroRotation() {
+  clearHeroTimer();
+  updateHeroMotionToggle();
+  if (!heroCanRotate()) return;
+
+  warmNextHeroSlide();
+  heroTimer = window.setTimeout(advanceHeroSlide, HERO_INTERVAL);
+}
 
 const finishMenuClose = () => {
   clearMenuCloseTimer();
@@ -207,6 +341,11 @@ if (shouldPlayIntro) {
 }
 
 skipIntro?.addEventListener("click", () => finishIntro(false));
+
+heroMotionToggle?.addEventListener("click", () => {
+  heroPausedByUser = !heroPausedByUser;
+  syncHeroRotation();
+});
 
 menuButton?.addEventListener("click", () => {
   setMenuState(!menuOpen);
@@ -548,14 +687,15 @@ if (!reducedMotion.matches && "IntersectionObserver" in window) {
 }
 
 const handleReducedMotionChange = () => {
-  if (!reducedMotion.matches) return;
-
-  setMenuState(false, { immediate: true });
-  if (introActive) finishIntro(true);
-  revealItems.forEach((item) => item.classList.add("is-visible"));
-  root.classList.remove("reveal-ready");
-  galleryPrevious?.classList.remove("is-flashing");
-  galleryNext?.classList.remove("is-flashing");
+  if (reducedMotion.matches) {
+    setMenuState(false, { immediate: true });
+    if (introActive) finishIntro(true);
+    revealItems.forEach((item) => item.classList.add("is-visible"));
+    root.classList.remove("reveal-ready");
+    galleryPrevious?.classList.remove("is-flashing");
+    galleryNext?.classList.remove("is-flashing");
+  }
+  syncHeroRotation();
 };
 
 const addMediaChangeListener = (mediaQuery, listener) => {
@@ -568,6 +708,9 @@ const addMediaChangeListener = (mediaQuery, listener) => {
 
 addMediaChangeListener(mobileMenu, handleMenuBreakpoint);
 addMediaChangeListener(reducedMotion, handleReducedMotionChange);
+navigator.connection?.addEventListener?.("change", syncHeroRotation);
+document.addEventListener("visibilitychange", syncHeroRotation);
+window.addEventListener("pageshow", syncHeroRotation);
 scheduleMenuCarWarmup();
 
 document.addEventListener("keydown", (event) => {

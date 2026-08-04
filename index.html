@@ -218,8 +218,54 @@
 
     <main id="main" tabindex="-1">
       <section id="start" class="hero">
-        <div class="hero-photo" aria-hidden="true"></div>
+        <div class="hero-media" data-hero-slideshow data-hero-interval="20000" aria-hidden="true">
+          <div class="hero-slide is-active" data-hero-slide>
+            <img
+              src="assets/garage-hero.jpg"
+              alt=""
+              width="1962"
+              height="802"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+          <div class="hero-slide" data-hero-slide>
+            <img
+              data-src="assets/garage-hero-front.jpg"
+              alt=""
+              width="1962"
+              height="802"
+              decoding="async"
+            />
+          </div>
+          <div class="hero-slide" data-hero-slide>
+            <img
+              data-src="assets/garage-hero-profile.jpg"
+              alt=""
+              width="1962"
+              height="802"
+              decoding="async"
+            />
+          </div>
+          <div class="hero-slide" data-hero-slide>
+            <img
+              data-src="assets/garage-hero-rear.jpg"
+              alt=""
+              width="1962"
+              height="802"
+              decoding="async"
+            />
+          </div>
+        </div>
         <div class="hero-noise" aria-hidden="true"></div>
+        <button
+          class="hero-motion-toggle"
+          type="button"
+          data-hero-motion
+          aria-pressed="false"
+          aria-label="Wstrzymaj zmianę zdjęć w tle"
+          hidden
+        ><span aria-hidden="true"></span></button>
         <div class="container hero-content">
           <p class="kicker reveal">Garaż Dawida <span>•</span> pielęgnacja aut</p>
           <h1 class="reveal">

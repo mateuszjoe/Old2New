@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(resolve(root, "index.html"), "utf8");
 const css = readFileSync(resolve(root, "styles.css"), "utf8");
+const js = readFileSync(resolve(root, "script.js"), "utf8");
 const failures = [];
 const passes = [];
 
@@ -56,6 +57,18 @@ check(
   "Header i footer uzywaja jednego wordmarku OLD2NEW",
 );
 check(
+  (html.match(/\bdata-hero-slide(?:\s|>)/g) ?? []).length === 4 &&
+    /data-hero-interval=["']20000["']/.test(html) &&
+    /data-hero-motion/.test(html),
+  "Hero ma cztery kadry, interwal 20 s i kontrolke pauzy",
+);
+check(
+  /\.hero-slide\s*\{[\s\S]*?transition:\s*opacity\s+1\.4s/.test(css) &&
+    !/@keyframes\s+hero-camera/.test(css) &&
+    /window\.setTimeout\(advanceHeroSlide,\s*HERO_INTERVAL\)/.test(js),
+  "Hero zmienia kadry samym crossfade bez ruchu kamery",
+);
+check(
   galleryButtons.length === 5 && galleryButtons.every((match, index) => Number(match[1]) === index),
   "Galeria ma piec kolejnych, dostepnych kadrow",
 );
@@ -89,7 +102,12 @@ check(!/26 realizacji/i.test(html), "Brak szybko dezaktualizującej się liczby 
 check(!/(?:MISJA_|GARAGE SYSTEM|hero-minimap|loader-reticle|VT323|arcade|garażowy HUD)/i.test(`${html}\n${css}`), "Brak elementów i języka HUD/arcade");
 check(/@media\s*\(max-width:\s*340px\)/.test(css) && /orientation:\s*landscape/.test(css), "CSS obejmuje wąskie telefony i orientację poziomą");
 
-const heroPath = resolve(root, "assets/garage-hero.jpg");
+const heroAssets = [
+  "assets/garage-hero.jpg",
+  "assets/garage-hero-front.jpg",
+  "assets/garage-hero-profile.jpg",
+  "assets/garage-hero-rear.jpg",
+];
 const newVisualAssets = [
   "assets/menu-car-driving.png",
   "assets/menu-car-crashed.png",
@@ -99,7 +117,10 @@ check(
   newVisualAssets.every((asset) => existsSync(resolve(root, asset)) && statSync(resolve(root, asset)).size < 600_000),
   "Nowe obrazy galerii i menu sa lokalne oraz lekkie",
 );
-check(existsSync(heroPath) && statSync(heroPath).size < 500_000, "Hero waży mniej niż 500 kB");
+check(
+  heroAssets.every((asset) => existsSync(resolve(root, asset)) && statSync(resolve(root, asset)).size < 500_000),
+  "Kazdy z czterech kadrow hero wazy mniej niz 500 kB",
+);
 check((css.match(/{/g) ?? []).length === (css.match(/}/g) ?? []).length, "Liczba nawiasów CSS się zgadza");
 
 console.log(`OLD2NEW audit: ${passes.length} checks passed.`);
