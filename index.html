@@ -28,7 +28,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Caveat:wght@500;600;700&family=Inter:wght@400;500;600;700&family=VT323&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
@@ -36,10 +36,10 @@
   </head>
   <body>
     <div class="preloader" data-preloader aria-label="Animowane intro OLD2NEW">
-      <div class="preloader-grid" aria-hidden="true"></div>
+      <div class="preloader-atmosphere" aria-hidden="true"></div>
       <div class="loader-topline">
-        <span>OLD<span>2</span>NEW // GARAGE SYSTEM</span>
-        <span>JOB_001</span>
+        <span class="loader-wordmark">OLD<span>2</span>NEW</span>
+        <span>Garaż Dawida • ręczna pielęgnacja</span>
       </div>
 
       <div class="wash-stage" aria-hidden="true">
@@ -60,10 +60,6 @@
             </filter>
           </defs>
 
-          <g class="loader-road">
-            <path d="M0 84h640M0 296h640M108 0v380M530 0v380" />
-            <path class="road-dashes" d="M0 190h640M320 0v380" />
-          </g>
           <ellipse class="loader-car-shadow" cx="320" cy="204" rx="205" ry="92" transform="rotate(-42 320 204)" />
 
           <g class="loader-car">
@@ -114,20 +110,13 @@
           </g>
         </svg>
 
-        <div class="loader-reticle"><span></span></div>
-        <div class="loader-status">
-          <span class="status-one">CEL: BRUDNY</span>
-          <span class="status-two">SZOROWANIE...</span>
-          <span class="status-three">CIŚNIENIE: 140 BAR</span>
-          <span class="status-four">EFEKT: OLD2NEW</span>
-        </div>
       </div>
 
       <div class="loader-bottomline">
         <div class="loader-progress"><span></span></div>
-        <span>ŁADOWANIE GARAŻU</span>
+        <span>Brud schodzi. Charakter zostaje.</span>
       </div>
-      <button class="loader-skip" type="button" data-skip-intro>Pomiń intro [ESC]</button>
+      <button class="loader-skip" type="button" data-skip-intro>Pomiń intro</button>
     </div>
 
     <a class="skip-link" href="#main">Przejdź do treści</a>
@@ -158,7 +147,7 @@
         <div class="hero-photo" aria-hidden="true"></div>
         <div class="hero-noise" aria-hidden="true"></div>
         <div class="container hero-content">
-          <p class="kicker reveal">Dawid.Garage <span>•</span> pielęgnacja aut</p>
+          <p class="kicker reveal">Garaż Dawida <span>•</span> pielęgnacja aut</p>
           <h1 class="reveal">
             Od starości<br />
             <span>do nowości.</span>
@@ -171,10 +160,9 @@
             <a class="button button-primary" href="#kontakt">Pokaż swoje auto</a>
             <a class="button button-ghost" href="#realizacje">Zobacz robotę</a>
           </div>
-          <div class="mission-panel" aria-label="Status garażu">
-            <span class="mission-label">MISJA_01</span>
-            <strong>PRZYWRÓĆ POŁYSK</strong>
-            <span class="mission-status"><i></i> GARAŻ GOTOWY</span>
+          <div class="hero-signature reveal" aria-label="Sposób pracy">
+            <span>Ręczna robota</span>
+            <strong>Bez taśmy. Bez pośpiechu.</strong>
           </div>
           <p class="scribble hero-note" aria-hidden="true">
             robię tak, jakbym robił dla siebie
@@ -183,30 +171,12 @@
             </svg>
           </p>
         </div>
-        <div class="hero-stamp" aria-hidden="true">
-          <span>Ręczna robota</span><strong>01</strong><span>Garażowy klimat</span>
-        </div>
-        <div class="hero-minimap" aria-hidden="true">
-          <span class="map-coords">X: 021 / Y: 997</span>
-          <svg viewBox="0 0 150 150" role="presentation">
-            <circle cx="75" cy="75" r="70" />
-            <path class="map-streets" d="M8 57h42l18-20v-29m74 38h-35L89 65v77M9 104h33l27 22h73M39 9v29l26 21h44l33 31" />
-            <path class="map-route" d="M24 105 48 86 64 91 83 66 114 47" />
-            <circle class="map-point" cx="24" cy="105" r="5" />
-            <path class="map-arrow" d="m114 39 9 17-18-3Z" />
-          </svg>
-          <span class="map-caption">TRASA DO EFEKTU</span>
-        </div>
       </section>
 
       <section class="ticker" aria-label="Najważniejsze cechy">
         <div class="ticker-track">
           <span>Dokładnie</span><i>✦</i><span>Bez pośpiechu</span><i>✦</i>
           <span>Po swojemu</span><i>✦</i><span>Z charakterem</span><i>✦</i>
-          <span aria-hidden="true">Dokładnie</span><i aria-hidden="true">✦</i>
-          <span aria-hidden="true">Bez pośpiechu</span><i aria-hidden="true">✦</i>
-          <span aria-hidden="true">Po swojemu</span><i aria-hidden="true">✦</i>
-          <span aria-hidden="true">Z charakterem</span><i aria-hidden="true">✦</i>
         </div>
       </section>
 
@@ -271,7 +241,7 @@
             <p class="kicker reveal">26 realizacji na Instagramie</p>
             <h2 class="section-title reveal">Efekt mówi<br /><em>sam za siebie.</em></h2>
             <p class="reveal">
-              Zobacz bieżące realizacje, metamorfozy i to, co aktualnie dzieje się
+              Zobacz bieżące realizacje, zdjęcia przed i po oraz to, co aktualnie dzieje się
               w garażu.
             </p>
             <a
@@ -318,7 +288,7 @@
             >Znajdź w Google <span>↗</span></a>
           </div>
           <p class="scribble contact-note" aria-hidden="true">
-            tutaj zaczyna się metamorfoza
+            pokaż auto. reszta dzieje się w garażu
             <svg viewBox="0 0 116 56" role="presentation"><path d="M111 7C73 4 41 16 11 41m0 0 16-2M11 41l8 12" /></svg>
           </p>
         </div>

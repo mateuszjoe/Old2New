@@ -33,13 +33,34 @@ const finishIntro = (immediate = false) => {
 if (document.documentElement.classList.contains("intro-seen") || reduceMotion) {
   finishIntro(true);
 } else {
-  window.setTimeout(() => finishIntro(false), 5350);
+  window.setTimeout(() => finishIntro(false), 4650);
 }
 
 skipIntro?.addEventListener("click", () => finishIntro(false));
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") finishIntro(false);
 });
+
+const revealItems = document.querySelectorAll(".reveal");
+
+if (!reduceMotion && "IntersectionObserver" in window) {
+  document.documentElement.classList.add("reveal-ready");
+
+  const revealObserver = new IntersectionObserver(
+    (entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      });
+    },
+    { threshold: 0.12, rootMargin: "0px 0px -36px" },
+  );
+
+  revealItems.forEach((item) => revealObserver.observe(item));
+} else {
+  revealItems.forEach((item) => item.classList.add("is-visible"));
+}
 
 const updateHeader = () => header.classList.toggle("scrolled", window.scrollY > 24);
 updateHeader();
