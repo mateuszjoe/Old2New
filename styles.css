@@ -44,7 +44,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 }
 .skip-link:focus { position: fixed; z-index: 100; top: 10px; left: 10px; background: var(--paper); color: var(--ink); padding: 10px 14px; }
 
-/* Intro: własna, wektorowa scena mycia auta */
+/* Intro: kreskówkowa scena mycia oldschoolowej beemki */
 .preloader { display: none; }
 .js:not(.intro-seen) .preloader {
   position: fixed;
@@ -94,6 +94,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   position: relative;
   z-index: 1;
   width: min(760px, 95vw);
+  aspect-ratio: 640 / 380;
   margin: auto;
   filter: drop-shadow(0 24px 45px rgba(0,0,0,.65));
 }
@@ -112,23 +113,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .loader-road .road-dashes { stroke: rgba(201,78,40,.32); stroke-dasharray: 20 18; animation: road-dash 1s linear infinite; }
 .loader-car-shadow { fill: rgba(0,0,0,.85); filter: url(#loaderShadow); }
 .loader-car { transform-origin: 320px 190px; animation: loader-car-pressure 5.2s ease-in-out both; }
-.loader-wheels rect { fill: #050505; stroke: #77736a; stroke-width: 3; }
-.loader-car-body { fill: url(#loaderPaint); stroke: #a8a397; stroke-width: 3; animation: loader-paint 5.2s ease-in-out both; }
-.loader-hood,
-.loader-roof { fill: rgba(255,255,255,.025); stroke: rgba(238,232,219,.23); stroke-width: 2; }
-.loader-windshield,
-.loader-rear-glass { fill: url(#loaderGlass); stroke: #798081; stroke-width: 2; }
-.loader-panel-lines { fill: none; stroke: rgba(238,232,219,.25); stroke-width: 2; }
-.loader-lights rect { fill: #d9c784; stroke: #121210; stroke-width: 2; }
-.loader-lights rect:nth-child(n+3) { fill: #9d321f; }
-.loader-grime { opacity: .96; mix-blend-mode: multiply; animation: grime-clean 5.2s ease-in-out both; }
+.loader-car-art { pointer-events: none; animation: loader-paint 5.2s ease-in-out both; }
+.loader-grime { opacity: .96; mix-blend-mode: multiply; filter: url(#loaderGrimeTexture); animation: grime-clean 5.2s ease-in-out both; }
 .loader-grime path,
-.loader-grime circle { fill: #5f472c; stroke: #80613b; stroke-width: 5; }
+.loader-grime circle { fill: #65451f; }
 .loader-foam { opacity: 0; animation: foam-cycle 5.2s ease-in-out both; }
 .loader-foam circle { fill: #e9eee6; stroke: rgba(164,204,207,.8); stroke-width: 5; }
+.loader-foam path { fill: none; stroke: rgba(233,238,230,.92); stroke-width: 14; stroke-linecap: round; stroke-dasharray: 2 20; }
 .loader-shine { opacity: 0; animation: shine-reveal 5.2s ease-in-out both; }
-.loader-shine path { fill: none; stroke: #fff8d8; stroke-width: 6; stroke-linecap: round; filter: drop-shadow(0 0 8px #fff); }
-.loader-shine .shine-star { stroke-width: 4; animation: shine-star .7s ease-in-out infinite alternate; }
+.loader-shine path { fill: none; stroke: #fff8d8; stroke-width: 3.25; stroke-linecap: round; filter: drop-shadow(0 0 5px rgba(255,248,216,.9)); }
+.loader-shine .shine-star { stroke-width: 2.5; animation: shine-star .7s ease-in-out infinite alternate; }
 .loader-cloth {
   opacity: 0;
   animation: cloth-wipe 5.2s cubic-bezier(.55,.02,.45,.98) both;
@@ -192,12 +186,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @keyframes grime-clean { 0%, 23% { opacity: .96; clip-path: inset(0 0 0 0); } 48% { opacity: .78; clip-path: inset(52% 0 0 0); } 70%, 100% { opacity: 0; clip-path: inset(100% 0 0 0); } }
 @keyframes foam-cycle { 0%, 18% { opacity: 0; } 28%, 48% { opacity: .83; } 68%, 100% { opacity: 0; } }
 @keyframes cloth-wipe {
-  0%, 15% { opacity: 0; transform: translate(245px, 30px) rotate(-8deg); }
-  20% { opacity: 1; transform: translate(260px, 58px) rotate(-8deg); }
-  30% { opacity: 1; transform: translate(330px, 115px) rotate(9deg); }
-  39% { opacity: 1; transform: translate(250px, 178px) rotate(-7deg); }
-  48% { opacity: 1; transform: translate(326px, 248px) rotate(10deg); }
-  54%, 100% { opacity: 0; transform: translate(255px, 300px) rotate(-5deg); }
+  0%, 15% { opacity: 0; transform: translate(445px, 26px) rotate(28deg); }
+  20% { opacity: 1; transform: translate(418px, 52px) rotate(22deg); }
+  30% { opacity: 1; transform: translate(345px, 116px) rotate(12deg); }
+  39% { opacity: 1; transform: translate(270px, 181px) rotate(4deg); }
+  48% { opacity: 1; transform: translate(190px, 252px) rotate(-8deg); }
+  54%, 100% { opacity: 0; transform: translate(126px, 318px) rotate(-16deg); }
 }
 @keyframes washer-pass {
   0%, 47% { opacity: 0; transform: translate(32px, 28px) rotate(12deg); }
@@ -209,7 +203,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @keyframes water-flow { to { stroke-dashoffset: -32; } }
 @keyframes shine-reveal { 0%, 68% { opacity: 0; } 76%, 94% { opacity: 1; } 100% { opacity: .75; } }
 @keyframes shine-star { to { opacity: .35; transform: scale(.78); transform-origin: center; } }
-@keyframes loader-paint { 0%, 54% { filter: brightness(.58) saturate(.35); } 76%, 100% { filter: brightness(1.28) saturate(.7) contrast(1.15); } }
+@keyframes loader-paint { 0%, 54% { filter: brightness(.7) saturate(.42) sepia(.15); } 76%, 100% { filter: brightness(1.1) saturate(.82) contrast(1.08); } }
 @keyframes loader-car-pressure { 0%, 50%, 78%, 100% { transform: translateX(0); } 55%, 65%, 75% { transform: translateX(-2px) rotate(-.3deg); } 60%, 70% { transform: translateX(2px) rotate(.3deg); } }
 @keyframes reticle-spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
 @keyframes status-one { 0%, 20% { opacity: 1; } 21%, 100% { opacity: 0; } }
@@ -459,7 +453,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .js:not(.intro-seen) .preloader { padding: 16px 14px; }
   .loader-topline { font-size: .82rem; }
   .loader-topline > span:last-child { display: none; }
-  .wash-stage { left: 50%; justify-self: start; width: min(116vw, 580px); margin: 0; transform: translateX(-50%); }
+  .wash-stage { left: 50%; align-self: center; justify-self: start; width: min(116vw, 580px); margin: 0; transform: translateX(-50%); }
   .wash-stage::before { display: none; }
   .loader-reticle { width: 68%; }
   .loader-status { right: 9%; bottom: 1%; width: 190px; font-size: 1rem; }
