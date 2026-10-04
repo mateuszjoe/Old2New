@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mateuszjoe.github.io/Old2New/sitemap.xml
+Sitemap: https://old2new.pro/sitemap.xml
