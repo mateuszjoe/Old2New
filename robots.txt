@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://old2new.pro/sitemap.xml
+Sitemap: https://old2new.pl/sitemap.xml
