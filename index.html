@@ -7,24 +7,18 @@
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <script>
       document.documentElement.classList.add("js");
-      try {
-        const forceIntro = new URLSearchParams(window.location.search).has("intro");
-        const introSeenAt = Number(localStorage.getItem("old2new-intro-seen-at"));
-        const introIsFresh = Date.now() - introSeenAt < 24 * 60 * 60 * 1000;
-        if (!forceIntro && introIsFresh) {
-          document.documentElement.classList.add("intro-seen");
-        }
-      } catch (error) {}
+      const forceIntro = new URLSearchParams(window.location.search).get("intro") === "1";
+      if (!forceIntro) document.documentElement.classList.add("intro-seen");
     </script>
     <meta
       name="description"
-      content="Ręczna pielęgnacja aut w okolicach Warszawy — garaż Dawida w Okuniewie. Zobacz zdjęcia z garażu i napisz, co chcesz zrobić przy swoim aucie."
+      content="Mycie aut, czyszczenie wnętrza, detailing i konserwacja w garażu Dawida w Okuniewie, w okolicach Warszawy. Wyślij zdjęcia na WhatsApp i zapytaj o wycenę."
     />
     <link rel="canonical" href="https://old2new.pl/" />
-    <meta property="og:title" content="OLD2NEW — od starości do nowości" />
+    <meta property="og:title" content="OLD2NEW — garaż Dawida w Okuniewie" />
     <meta
       property="og:description"
-      content="Ręczna pielęgnacja aut w okolicach Warszawy — garaż Dawida w Okuniewie."
+      content="Mycie aut, czyszczenie wnętrza, detailing i konserwacja. Garaż Dawida w Okuniewie, w okolicach Warszawy."
     />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pl_PL" />
@@ -34,10 +28,10 @@
     <meta property="og:image:height" content="802" />
     <meta property="og:image:alt" content="Ciemne klasyczne BMW w garażu OLD2NEW" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="OLD2NEW — od starości do nowości" />
-    <meta name="twitter:description" content="Ręczna pielęgnacja aut w okolicach Warszawy — garaż Dawida w Okuniewie." />
+    <meta name="twitter:title" content="OLD2NEW — garaż Dawida w Okuniewie" />
+    <meta name="twitter:description" content="Mycie aut, czyszczenie wnętrza, detailing i konserwacja. Garaż Dawida w Okuniewie, w okolicach Warszawy." />
     <meta name="twitter:image" content="https://old2new.pl/assets/garage-hero.jpg" />
-    <title>OLD2NEW | Garaż Dawida — okolice Warszawy</title>
+    <title>Mycie i detailing aut w Okuniewie | OLD2NEW</title>
     <link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="icon" href="assets/favicon-o2n.svg" type="image/svg+xml" sizes="any" />
     <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32" />
@@ -50,8 +44,8 @@
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@1,600;1,700&family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
-    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20261013-contact" />
+    <script src="script.js?v=20261013-contact" defer></script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -59,7 +53,7 @@
         "@id": "https://old2new.pl/#business",
         "name": "Myjnia Okuniew - OdStarościDoNowości",
         "alternateName": "OLD2NEW",
-        "description": "Ręczna pielęgnacja aut w okolicach Warszawy — garaż Dawida w Okuniewie.",
+        "description": "Mycie aut, czyszczenie wnętrza, detailing i konserwacja. Garaż Dawida w Okuniewie, w okolicach Warszawy.",
         "url": "https://old2new.pl/",
         "image": "https://old2new.pl/assets/garage-hero.jpg",
         "telephone": "+48 797 843 789",
@@ -73,7 +67,45 @@
         "sameAs": [
           "https://www.instagram.com/od_staroscidonowosci/",
           "https://www.google.com/maps/search/?api=1&query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
-        ]
+        ],
+        "areaServed": {
+          "@type": "Place",
+          "name": "Okuniew i okolice"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Pielęgnacja aut w garażu Dawida",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Mycie auta"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Czyszczenie wnętrza"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Detailing"
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Konserwacja"
+              }
+            }
+          ]
+        }
       }
     </script>
     <noscript>
@@ -270,24 +302,24 @@
           hidden
         ><span aria-hidden="true"></span></button>
         <div class="container hero-content">
-          <p class="kicker reveal">Garaż Dawida <span>•</span> pielęgnacja aut</p>
+          <p class="kicker reveal">Garaż Dawida <span>•</span> Okuniew</p>
           <h1 class="reveal">
             Od starości<br />
             <span>do nowości<span class="hero-dot">.</span></span>
           </h1>
           <p class="hero-lead reveal">
-            Każde auto ma jeszcze coś do pokazania. Trzeba tylko dać mu czas,
-            dobrą chemię i dwie konkretne ręce.
+            Mycie auta, czyszczenie wnętrza, detailing i konserwacja.
+            W moim garażu przy Łąkowej 33, w okolicach Warszawy.
           </p>
           <div class="hero-actions reveal">
             <a
               class="button button-primary"
-              href="https://www.instagram.com/od_staroscidonowosci/"
+              href="https://wa.me/48797843789?text=Cze%C5%9B%C4%87%20Dawid!%20Pisz%C4%99%20ze%20strony%20old2new.pl.%20Chc%C4%99%20zapyta%C4%87%20o%20wycen%C4%99.%0AAuto%3A%20%0ADo%20zrobienia%3A%20%0APode%C5%9Bl%C4%99%20zdj%C4%99cia."
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Wyślij zdjęcia auta na Instagramie — otwiera nową kartę"
-            >Wyślij zdjęcia auta <span aria-hidden="true">↗</span></a>
-            <a class="button button-ghost" href="#realizacje">Sprawdź robotę</a>
+              aria-label="Wyślij zdjęcia auta do Dawida na WhatsApp — otwiera nową kartę"
+            >Wyceń auto na WhatsApp <span aria-hidden="true">↗</span></a>
+            <a class="button button-ghost" href="tel:+48797843789">Zadzwoń do Dawida</a>
           </div>
           <div class="hero-signature reveal" aria-label="Sposób pracy">
             <span>Ręczna robota</span>
@@ -338,22 +370,22 @@
           <div class="service-list">
             <article class="service reveal">
               <span class="service-number">01</span>
-              <div><h3>Mycie zewnętrzne</h3><p>Dokładne oczyszczenie auta i dopracowanie detali.</p></div>
+              <div><h3>Mycie auta</h3><p>Dokładne oczyszczenie auta i dopracowanie detali.</p></div>
               <span class="service-tag">Lakier • felgi • detale</span>
             </article>
             <article class="service reveal">
               <span class="service-number">02</span>
-              <div><h3>Odświeżenie wnętrza</h3><p>Porządek tam, gdzie spędzasz najwięcej czasu.</p></div>
+              <div><h3>Czyszczenie wnętrza</h3><p>Porządek w środku — zakres czyszczenia dobieram do stanu Twojego auta.</p></div>
               <span class="service-tag">Kokpit • plastiki • porządek</span>
             </article>
             <article class="service reveal">
               <span class="service-number">03</span>
-              <div><h3>Dopracowanie detali</h3><p>Praca nad połyskiem, wykończeniem i końcowym efektem.</p></div>
+              <div><h3>Detailing</h3><p>Praca nad połyskiem, wykończeniem i końcowym efektem.</p></div>
               <span class="service-tag">Połysk • wykończenie</span>
             </article>
             <article class="service reveal">
               <span class="service-number">04</span>
-              <div><h3>Indywidualna robota</h3><p>Masz konkretny problem? Najpierw obejrzę auto.</p></div>
+              <div><h3>Konserwacja</h3><p>Napisz, co chcesz zabezpieczyć. Zakres konserwacji ustalimy po obejrzeniu auta.</p></div>
             </article>
           </div>
         </div>
@@ -378,7 +410,7 @@
             <ol class="work-order-list">
               <li>
                 <span>01</span>
-                <div><h3>Wyślij zdjęcia</h3><p>Pokaż auto i napisz krótko, co najbardziej Ci przeszkadza.</p></div>
+                <div><h3>Wyślij zdjęcia</h3><p>Na WhatsApp podeślij 2–3 zdjęcia, model auta i krótki opis tego, co chcesz zrobić.</p></div>
               </li>
               <li>
                 <span>02</span>
@@ -581,8 +613,8 @@
           <p class="kicker reveal">Masz auto do ogarnięcia?</p>
           <h2 class="contact-title reveal">Pokaż, co jest<br />do zrobienia<span>.</span></h2>
           <p class="contact-lead reveal">
-            Podeślij zdjęcia na Instagramie albo zadzwoń. Zakres i termin ustalimy
-            po krótkiej rozmowie i obejrzeniu auta.
+            Podeślij na WhatsApp 2–3 zdjęcia, model auta i opis tego, co chcesz zrobić.
+            Możesz też napisać na Instagramie albo zadzwonić. Zakres i termin ustalimy po rozmowie i obejrzeniu auta.
           </p>
           <dl class="contact-details reveal">
             <div><dt>Garaż</dt><dd>Łąkowa 33, Okuniew</dd></div>
@@ -592,11 +624,18 @@
           <div class="contact-actions reveal">
             <a
               class="button button-dark"
+              href="https://wa.me/48797843789?text=Cze%C5%9B%C4%87%20Dawid!%20Pisz%C4%99%20ze%20strony%20old2new.pl.%20Chc%C4%99%20zapyta%C4%87%20o%20wycen%C4%99.%0AAuto%3A%20%0ADo%20zrobienia%3A%20%0APode%C5%9Bl%C4%99%20zdj%C4%99cia."
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Napisz do Dawida na WhatsApp — otwiera nową kartę"
+            >Wyślij zdjęcia na WhatsApp <span aria-hidden="true">↗</span></a>
+            <a
+              class="button button-outline-dark"
               href="https://www.instagram.com/od_staroscidonowosci/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Wyślij zdjęcia auta na Instagramie — otwiera nową kartę"
-            >Wyślij zdjęcia na IG <span aria-hidden="true">↗</span></a>
+              aria-label="Otwórz profil Dawida na Instagramie — otwiera nową kartę"
+            >Instagram <span aria-hidden="true">↗</span></a>
             <a
               class="button button-outline-dark"
               href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci"
@@ -667,6 +706,7 @@
         </a>
         <p>Garaż Dawida • Okuniew</p>
         <div>
+          <a href="https://wa.me/48797843789?text=Cze%C5%9B%C4%87%20Dawid!%20Pisz%C4%99%20ze%20strony%20old2new.pl.%20Chc%C4%99%20zapyta%C4%87%20o%20wycen%C4%99.%0AAuto%3A%20%0ADo%20zrobienia%3A%20%0APode%C5%9Bl%C4%99%20zdj%C4%99cia." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp — otwiera nową kartę">WhatsApp ↗</a>
           <a href="https://www.instagram.com/od_staroscidonowosci/" target="_blank" rel="noopener noreferrer" aria-label="Instagram — otwiera nową kartę">Instagram ↗</a>
           <a href="tel:+48797843789" aria-label="Zadzwoń pod numer 797 843 789">Telefon</a>
           <a href="https://www.google.com/maps/search/?api=1&amp;query=Myjnia%20Okuniew%20-%20OdStaro%C5%9BciDoNowo%C5%9Bci" target="_blank" rel="noopener noreferrer" aria-label="Google — otwiera nową kartę">Google ↗</a>
@@ -674,5 +714,13 @@
         <small>© <span data-year></span> OLD2NEW</small>
       </div>
     </footer>
+    <nav class="mobile-contact" aria-label="Szybki kontakt z Dawidem" data-mobile-contact>
+      <a class="mobile-contact-primary" href="https://wa.me/48797843789?text=Cze%C5%9B%C4%87%20Dawid!%20Pisz%C4%99%20ze%20strony%20old2new.pl.%20Chc%C4%99%20zapyta%C4%87%20o%20wycen%C4%99.%0AAuto%3A%20%0ADo%20zrobienia%3A%20%0APode%C5%9Bl%C4%99%20zdj%C4%99cia." target="_blank" rel="noopener noreferrer" aria-label="Wyślij zdjęcia na WhatsApp — otwiera nową kartę">
+        <strong>WhatsApp <span aria-hidden="true">↗</span></strong><span>Wyślij zdjęcia auta</span>
+      </a>
+      <a href="tel:+48797843789" aria-label="Zadzwoń do Dawida: 797 843 789">
+        <strong>Zadzwoń</strong><span>797 843 789</span>
+      </a>
+    </nav>
   </body>
 </html>

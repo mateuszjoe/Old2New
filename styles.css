@@ -1669,3 +1669,41 @@ body.lightbox-open { overflow: hidden; }
   .contact-details { grid-column: 2; grid-row: 2; margin-top: 4px; }
   .contact-actions { grid-column: 2; grid-row: 3; grid-template-columns: 1fr; }
 }
+
+/* Kontakt pozostaje dostępny podczas przewijania na telefonie. */
+.mobile-contact { display: none; }
+@media (max-width: 900px) {
+  html { scroll-padding-bottom: calc(88px + var(--safe-bottom)); }
+  body { padding-bottom: calc(76px + var(--safe-bottom)); }
+  .mobile-contact {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 8px;
+    padding: 8px max(12px, var(--safe-right)) calc(8px + var(--safe-bottom)) max(12px, var(--safe-left));
+    border-top: 1px solid var(--line);
+    background: #0e0d0b;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.24);
+  }
+  .mobile-contact a {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    min-width: 0;
+    min-height: 59px;
+    padding: 6px 8px;
+    border: 1px solid rgba(222,216,204,.26);
+    color: var(--white);
+    text-decoration: none;
+    line-height: 1.4;
+  }
+  .mobile-contact a.mobile-contact-primary { background: var(--rust); border-color: var(--rust); }
+  .mobile-contact strong { font-size: .86rem; }
+  .mobile-contact a > span { font-size: .69rem; }
+  .intro-playing .mobile-contact,
+  body.menu-open .mobile-contact,
+  body.lightbox-open .mobile-contact { visibility: hidden; pointer-events: none; }
+  .hero { padding-bottom: max(90px, calc(76px + var(--safe-bottom))); }
+}

@@ -2,7 +2,8 @@ const root = document.documentElement;
 const body = document.body;
 const header = document.querySelector("[data-header]");
 const main = document.querySelector("main");
-const footer = document.querySelector("footer");
+const footer = document.querySelector(".footer");
+const mobileContact = document.querySelector("[data-mobile-contact]");
 const skipLink = document.querySelector(".skip-link");
 const menuButton = document.querySelector(".menu-toggle");
 const menuButtonLabel = menuButton?.querySelector(".sr-only");
@@ -78,6 +79,7 @@ const syncPageInert = () => {
   setElementInert(main, introActive || menuBlocksPage() || lightboxOpen);
   setElementInert(footer, introActive || menuBlocksPage() || lightboxOpen);
   setElementInert(skipLink, introActive || menuBlocksPage() || lightboxOpen);
+  setElementInert(mobileContact, introActive || menuBlocksPage() || lightboxOpen);
   syncBodyLocks();
   syncHeroRotation();
 };
