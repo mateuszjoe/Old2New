@@ -220,6 +220,13 @@
 
   if (hasConsent()) startAnalytics();
   else { window[disableKey] = true; clearAnalyticsCookies(); }
-  if (!choice) showSettings(false);
+  function openSettingsFromLink() {
+    if (location.hash !== "#ustawienia-statystyk") return false;
+    document.querySelector("[data-analytics-settings]")?.focus({ preventScroll: true });
+    showSettings(true);
+    return true;
+  }
+  window.addEventListener("hashchange", openSettingsFromLink);
+  if (!openSettingsFromLink() && !choice) showSettings(false);
   scheduleExpiry();
 })();

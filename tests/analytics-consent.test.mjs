@@ -147,3 +147,21 @@ test("Stored valid consent loads analytics once; development hosts never send it
     } finally { await s.context.close(); }
   }
 });
+
+test("Privacy link reopens saved consent settings without starting analytics", async () => {
+  const s = await setup();
+  try {
+    await s.choose("denied");
+    await s.page.goto("https://old2new.pl/#ustawienia-statystyk");
+    assert.equal(await s.page.locator(".analytics-consent").isVisible(), true);
+    assert.equal(await s.page.locator("[data-consent-choice='denied']").evaluate((el) => el === document.activeElement), true);
+    assert.equal(s.requests(), 0);
+    await s.page.keyboard.press("Escape");
+    assert.equal(await s.page.locator(".analytics-consent").isVisible(), false);
+    assert.equal(await s.page.locator("[data-analytics-settings]").evaluate((el) => el === document.activeElement), true);
+    await s.page.goto("https://old2new.pl/#kontakt");
+    await s.page.goto("https://old2new.pl/#ustawienia-statystyk");
+    await s.page.locator(".analytics-consent").waitFor({ state: "visible" });
+    assert.equal(s.requests(), 0);
+  } finally { await s.context.close(); }
+});

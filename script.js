@@ -16,6 +16,7 @@ const skipIntro = document.querySelector("[data-skip-intro]");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const mobileMenu = window.matchMedia("(max-width: 900px)");
 const heroSlideshow = document.querySelector("[data-hero-slideshow]");
+const heroSection = heroSlideshow?.closest(".hero");
 const heroSlides = [
   ...(heroSlideshow?.querySelectorAll("[data-hero-slide]") ?? []),
 ];
@@ -54,6 +55,7 @@ let heroTimer = 0;
 let heroTransitionToken = 0;
 let heroPausedByUser = false;
 let heroWarmupScheduled = false;
+let heroInView = !(heroSection && "IntersectionObserver" in window);
 
 const HERO_INTERVAL = Math.max(
   5_000,
@@ -98,34 +100,6 @@ const hydrateMenuCars = () => {
   });
 };
 
-let menuCarWarmupScheduled = false;
-const scheduleMenuCarWarmup = () => {
-  if (
-    !mobileMenu.matches ||
-    menuCarWarmupScheduled ||
-    menuCars.every((car) => car.getAttribute("src"))
-  ) {
-    return;
-  }
-
-  menuCarWarmupScheduled = true;
-  const warmUp = () => {
-    menuCarWarmupScheduled = false;
-    if (!mobileMenu.matches) return;
-    menuCars.forEach((car) => {
-      car.fetchPriority = "low";
-      car.decoding = "async";
-    });
-    hydrateMenuCars();
-  };
-
-  if ("requestIdleCallback" in window) {
-    window.requestIdleCallback(warmUp, { timeout: 1200 });
-  } else {
-    window.setTimeout(warmUp, 350);
-  }
-};
-
 const heroNetworkBlocksRotation = () => {
   const connection = navigator.connection;
   return Boolean(
@@ -135,6 +109,7 @@ const heroNetworkBlocksRotation = () => {
 
 const heroCanRotate = () =>
   heroSlides.length > 1 &&
+  heroInView &&
   !reducedMotion.matches &&
   !heroPausedByUser &&
   !document.hidden &&
@@ -239,6 +214,18 @@ function syncHeroRotation() {
 
   warmNextHeroSlide();
   heroTimer = window.setTimeout(advanceHeroSlide, HERO_INTERVAL);
+}
+
+if (heroSection && "IntersectionObserver" in window) {
+  const heroVisibilityObserver = new IntersectionObserver((entries) => {
+    const entry = entries.find((item) => item.target === heroSection);
+    if (!entry) return;
+    const visible = entry.isIntersecting && entry.intersectionRatio > 0;
+    if (heroInView === visible) return;
+    heroInView = visible;
+    syncHeroRotation();
+  });
+  heroVisibilityObserver.observe(heroSection);
 }
 
 const finishMenuClose = () => {
@@ -664,7 +651,6 @@ gallerySwipeArea?.addEventListener("lostpointercapture", clearGalleryPointer);
 
 const handleMenuBreakpoint = () => {
   setMenuState(false, { immediate: true });
-  scheduleMenuCarWarmup();
 };
 
 const revealItems = document.querySelectorAll(".reveal");
@@ -713,7 +699,6 @@ addMediaChangeListener(reducedMotion, handleReducedMotionChange);
 navigator.connection?.addEventListener?.("change", syncHeroRotation);
 document.addEventListener("visibilitychange", syncHeroRotation);
 window.addEventListener("pageshow", syncHeroRotation);
-scheduleMenuCarWarmup();
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
